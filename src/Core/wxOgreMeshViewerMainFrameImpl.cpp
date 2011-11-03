@@ -69,7 +69,9 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 			m_cellWidth( 50 ),
 			m_cellDepth( 50 ),
 			m_wasLeftPressed( false ),
-			m_wasRightPressed( false )
+			m_wasRightPressed( false ),
+			m_mouseX( 0 ),
+			m_mouseY( 0 )
 {
 #ifndef __WXMSW__
 	//Set config directory to user home directory
@@ -447,8 +449,8 @@ void MeshyMainFrameImpl::createLogWindow( bool bShow )
 			logPane = m_wxAuiManager->GetPane( wxT("LogWindow") );
 		}
 
-		logPane.Show();
 		m_wxAuiManager->Update();
+		logPane.Show();
 	}
 }
 
@@ -531,9 +533,9 @@ void MeshyMainFrameImpl::showAboutBox()
 
 	info.SetName(_T("Ogre Meshy"));
 #ifdef __WXMSW__
-	info.SetVersion(wxT("1.4"));
+	info.SetVersion(wxT("1.5"));
 #else
-	info.SetVersion(wxT("1.4 for Linux beta"));
+	info.SetVersion(wxT("1.5 for Linux beta"));
 #endif
     info.SetDescription(_T("Simple application to view mesh properties\n") + descLinked);
     info.SetCopyright(_T("(C) 2010-2011 Matias N. Goldberg \"dark_sylinc\""));

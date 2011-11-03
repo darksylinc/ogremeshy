@@ -1,3 +1,6 @@
+[1.5]
+Fixed weird docking windows behavior when floating.
+
 [1.4]
 Added ability to take screenshots with F12 key. They're saved in the documents folder.
 Fixed rare crash when using a material defined outside a resources.cfg but which depended on shaders defined there; and resources.cfg file was reloaded.
