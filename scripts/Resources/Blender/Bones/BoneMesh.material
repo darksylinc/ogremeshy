@@ -1,0 +1,24 @@
+material wxOgreMeshViewer/BoneMeshMaterial
+{
+	receive_shadows off
+	technique
+	{
+		pass
+		{
+			ambient		0 0 0 0
+			diffuse		0.2 0.2 0.2 0.2
+			specular	0 0 0 0 1
+			emissive	0.65 0.65 0.65 0.5
+
+			depth_check off
+			depth_write off
+			
+			scene_blend one one_minus_src_alpha
+			
+			texture_unit
+			{
+				texture				Bones.png
+			}
+		}
+	}
+}

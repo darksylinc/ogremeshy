@@ -1,0 +1,6 @@
+Go to the folder where all the executables are placed.
+
+Type "make install" (it may ask you for root password) and you're done. 
+Type "make uninstall" for the opposite effect.
+
+For more information see Readme.txt

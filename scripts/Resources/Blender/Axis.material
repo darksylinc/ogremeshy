@@ -1,0 +1,32 @@
+abstract material BaseAxis
+{
+	receive_shadows off
+	technique
+	{
+		pass
+		{
+			ambient		0 0 0 0
+			diffuse		0.2 0.2 0.2 0.5
+			specular	0 0 0 0 1
+			emissive	$emissive_colour
+
+			depth_check off
+			depth_write off
+			
+			scene_blend one one_minus_src_alpha
+		}
+	}
+}
+
+material wxOgreMeshViewer/AxisX_Red : BaseAxis
+ {
+	set $emissive_colour " 0.800000 0.143781 0.123933 0.500000 "
+}
+material wxOgreMeshViewer/AxisY_Green : BaseAxis
+{
+	set $emissive_colour " 0.123933 0.800000 0.123933 0.500000 "
+}
+material wxOgreMeshViewer/AxisZ_Blue : BaseAxis
+{
+	set $emissive_colour " 0.124000 0.124000 0.800000 0.500000 "
+}

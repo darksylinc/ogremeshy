@@ -1,0 +1,7 @@
+Default/Vera
+{
+	type 		truetype
+	source 		Vera.ttf
+	size 		15
+	resolution 	96
+}

@@ -1,0 +1,111 @@
+[1.4]
+Added ability to take screenshots with F12 key. They're saved in the documents folder.
+Fixed rare crash when using a material defined outside a resources.cfg but which depended on shaders defined there; and resources.cfg file was reloaded.
+Windows: Application now comes as an installer, with file association included for ".ogre" files.
+
+* The following changes have been mainly brought to you by "tdev" (Thomas Fischer):
+Fixed mousewheel. It's now working. Also fixed imprecision (int->float)
+Log window hidden by default, only shows upon error or through menu
+Log window is now coloured.
+Enforcing vsync: otherwise cpu waste and lots of warnings upon window resizing
+Reloading a mesh no longer resets camera position
+Now possible to close the log pane, overrode the panes' close button event
+Windows: logs and config now stored in the user path
+FPS & batch count displayed on bottom
+
+* The following change has been brought to you by "toglia":
+Linux: Fixed colour picker dialogs.
+
+
+[1.3]
+Reloading a resources.cfg file would stop the reloading at the first particle script encountered, since particle templates weren't being destroyed.
+Reloading a resources.cfg now updates automatically the material in used in case such material and/or it's shaders were defined among those resources
+Reloading resources.cfg with corrupted material data being in use could ocassionally cause crashes (and always in Linux)
+Improved Linux stability
+Updated FAQ
+
+[1.21]
+Fixed crash and odd behaviors introduced in v1.2 when using bone size slider without having the names being displayed
+
+[1.2]
+Changed Linux behavior: settings are now saved to "(%home)/~.ogremeshy/" (thanks to Duong Pham for the patch)
+Recompiled application to support latest Skeleton format (animation rebase on any keyframe was added)
+Added bone name text above the bones toggle.
+Removed "Hide IK Bones" options as it was useless.
+
+[1.1]
+Fixed error "Cannot find vertex track with the specified handle N in Animation::getVertexTrack at ..\..\OgreMain\src\OgreAnimation.cpp (line 266)" when loading a mesh which had poses in the submesh N-1
+
+[1.01]
+Fixed pose animation slider not updating animation when moving it.
+Fixed crashes and other rare bugs when loading a mesh that has pose keys but no animation data for those poses.
+Fixed crash when using manual pose animation on the current mesh and then loading a different mesh which also has Pose data.
+
+[1.0]
+Added Pose Animations
+Fixed bug where selecting a different light would overwrite it's values with the ones from the old light.
+
+[0.9]
+Default GUI layouts are saved into file: GUI_Layout.cfg. This allows user interface's customization :)
+Added Linux support
+
+[0.8]
+Failsafe mesh loading: when materials failed to parse, load the mesh without materials instead of crashing
+Number of node tracks is now listed in the animations page right next to the animation name
+Added light panel! Supports editing and saving custom lights
+Show bones axes on the node track being selected; to hide it select the name of the animation in the selection tree
+
+
+[0.7]
+Added grid settings dialog
+Fixed silent crash when launching with a mesh as a command argument and there were errors
+Grid width & depth are now in the unit measure the cell size is
+
+[0.7 RC1]
+Release Candidate 1. Removed beta status
+Added grid
+Fixed render window's flickering (actually, it was a bug in Ogre) when moving or sizing an adjacent dockable window
+Fixed absolute file paths not working when loading resources.cfg
+When loading a different mesh, the old animation information still persisted in the animation window.
+Final release will have a GUI window to tweak the grid settings. Until then, manually adjust UserSettings.cfg
+
+[0.6b]
+Changed Alpha to Beta state
+Changed name to Ogre Meshy!
+Added number of actual bones used in rendering per submesh in the information page
+Added bone animation track enumeration, very basic for now
+
+
+[0.5a]
+Added show bones toggle
+Added hide IK bones checkbox option
+Added slider to control displayed bones' size
+Removed unused "additional information" text dialog, replaced by Generate Detailed Report button (yet not implemented)
+
+[0.4a]
+Axis is now scaled by the mesh size
+Folders are remembered separately when browsing resources.cfg files or .mesh files
+User settings are now saved under UserSettings.cfg
+Supports loading last opened resources.cfg
+Basic panning support
+
+[0.3a]
+Added ability to reload meshes
+Background (clear) colour can be customized
+Added a toolbar
+Added ability to load & parse resources.cfg files, as well as they're accepted as a command line parameter
+Camera Zoom In/Out is now scaled by the bounding radius, making it consistent with very different sized meshes
+Added show axis
+
+[0.2a]
+Fixed aspect ratio problem
+Meshes can be loaded from the command line
+Tweaked camera rotation through the mouse, it's much slower now
+Zoom in & out by holding right click
+Use "-setup" command line to see OGRE config dialog
+Added bounding box toggle
+Added wireframe mode toggle
+Bounding box information displays width, height & depth
+
+[0.1a]
+*First Release
