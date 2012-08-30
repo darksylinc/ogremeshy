@@ -843,10 +843,18 @@ void MeshyMainFrameImpl::showMeshInfo()
 												(subMesh->useSharedVertices ?
 												wxString(wxT("No")) : wxString(wxT("Yes"))) );
 		m_meshInfoPage->AppendItem( subMeshId, wxString( ("Material: " + subMesh->getMaterialName()).c_str(), wxConvUTF8 ) );
-		m_meshInfoPage->AppendItem( subMeshId, wxString(wxT("Indices: ")) << subMesh->indexData->indexCount <<
-												((subMesh->indexData->indexBuffer->getType() ==
-																Ogre::HardwareIndexBuffer::IT_16BIT) ?
-												wxT(" (16-bit)") : wxT(" (32-bit)" )) );
+
+		if( subMesh->indexData && !subMesh->indexData->indexBuffer.isNull() )
+		{
+			m_meshInfoPage->AppendItem( subMeshId, wxString(wxT("Indices: ")) << subMesh->indexData->indexCount
+												<< ((subMesh->indexData->indexBuffer->getType() ==
+																	Ogre::HardwareIndexBuffer::IT_16BIT) ?
+													wxT(" (16-bit)") : wxT(" (32-bit)" )) );
+		}
+		else
+		{
+			m_meshInfoPage->AppendItem( subMeshId, wxString(wxT("Indices: Not present")) );
+		}
 
 		if( !subMesh->useSharedVertices )
 		{
