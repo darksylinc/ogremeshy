@@ -179,7 +179,7 @@ void LightsPanel::OnLightSelectionChange( wxCommandEvent& event )
 		m_lightDirY->SetValue( wxString() << light->getDirection().y );
 		m_lightDirZ->SetValue( wxString() << light->getDirection().z );
 
-		m_spinPower->SetValue( wxString() << light->getPowerScale() );
+		m_spinPower->SetValue( wxString() << static_cast<int>(light->getPowerScale()) );
 
 		m_textDiffuseColour->SetValue( decToHex( light->getDiffuseColour().getAsABGR() ) );
 		m_diffusePickColour->SetBackgroundColour( wxColour( light->getDiffuseColour().getAsABGR() ) );
@@ -216,6 +216,16 @@ void LightsPanel::OnButtonClick( wxCommandEvent& event )
 			m_lightsChoice->Delete( light );
 			m_lightsChoice->SetSelection( std::min<unsigned int>( m_lightsChoice->GetCount() - 1, light ) );
 
+			OnLightSelectionChange( emptyEvt );
+		}
+	}
+	else if( event.GetId() == wxID_DIRNORMALIZE )
+	{
+		int idx = m_lightsChoice->GetSelection();
+		if( (unsigned int)idx < m_lights.size() )
+		{
+			Ogre::Light *light = m_lights[idx];
+			light->setDirection( light->getDirection().normalisedCopy() );
 			OnLightSelectionChange( emptyEvt );
 		}
 	}
@@ -299,10 +309,6 @@ void LightsPanel::updateLightParams()
 		//vTmp.normalise();
 		light->setDirection( vTmp );
 
-		//Set power
-		/*if( m_spinPower->GetValue().ToDouble( &dValue ) )
-			light->setPowerScale( static_cast<float>(dValue) );*/
-
 		unsigned long lValue;
 		Ogre::ColourValue cTmp;
 		wxString colourString;
@@ -333,6 +339,9 @@ void LightsPanel::updateLightParams()
 			light->setSpecularColour( cTmp );
 			m_specularPickColour->SetBackgroundColour( wxColour( light->getSpecularColour().getAsABGR() ) );
 		}
+
+		//Set power
+		light->setPowerScale( m_spinPower->GetValue() );
 
 		//Attenuation
 		double dValues[4];
@@ -381,6 +390,7 @@ void LightsPanel::saveSettings( std::ofstream &myFile )
 		myFile << "DirectionZ = " << m_lights[i]->getDirection().z	<< "\n";
 		myFile << "Diffuse = "	<< std::hex << m_lights[i]->getDiffuseColour().getAsABGR() << "\n";
 		myFile << "Specular = "	<< std::hex << m_lights[i]->getSpecularColour().getAsABGR()<< "\n";
+		myFile << "Power = "	<< m_lights[i]->getPowerScale()	<< "\n";
 		myFile << "Range = "	<< m_lights[i]->getAttenuationRange()	<< "\n";
 		myFile << "Quadric = "	<< m_lights[i]->getAttenuationQuadric()	<< "\n";
 		myFile << "Linear = "	<< m_lights[i]->getAttenuationLinear()	<< "\n";
@@ -403,9 +413,11 @@ void LightsPanel::saveSettings( std::ofstream &myFile )
 //-----------------------------------------------------------------------------
 void LightsPanel::loadSettings( const Ogre::ConfigFile::SettingsMultiMap &settings )
 {
-	Ogre::Vector3 vPos, vDir;
-	Ogre::ColourValue diffuse, specular;
+	Ogre::Vector3 vPos( Ogre::Vector3::ZERO ), vDir( Ogre::Vector3::NEGATIVE_UNIT_Y );
+	Ogre::ColourValue diffuse( Ogre::ColourValue::White ), specular( Ogre::ColourValue::White );
+	float power = 1.0f;
 	float atten[4];
+	atten[0] = atten[1] = atten[2] = atten[3] = 1.0f;
 
 	Ogre::Light *light = m_sceneManager->createLight();
 
@@ -444,6 +456,9 @@ void LightsPanel::loadSettings( const Ogre::ConfigFile::SettingsMultiMap &settin
 				specular.setAsABGR( lValue );
 		}
 
+		else if( i->first == "Power" )
+			power = Ogre::StringConverter::parseReal( i->second );
+
 		else if( i->first == "Range" )
 			atten[0] = Ogre::StringConverter::parseReal( i->second );
 		else if( i->first == "Quadric" )
@@ -461,6 +476,7 @@ void LightsPanel::loadSettings( const Ogre::ConfigFile::SettingsMultiMap &settin
 			light->setSpotlightFalloff( Ogre::StringConverter::parseReal( i->second ) );
 	}
 
+	light->setPowerScale( power );
 	light->setAttenuation( atten[0], atten[3], atten[2], atten[1] );
 	light->setPosition( vPos );
 	light->setDirection( vDir );

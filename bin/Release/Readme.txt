@@ -1,7 +1,7 @@
-﻿wxOgreMeshViewer  v1.21
+﻿wxOgreMeshViewer  v1.5
 =======================
 
-Copyright (C) 2010-2011 Matías Goldberg ("dark_sylinc)
+Copyright (C) 2010-2012 Matías Goldberg ("dark_sylinc)
 Under GPLv3 license
 
 File.png, Reload.png & ChangeBGColour.png are icons from H2O KDE package, made by Rogerio de Souza Santos, http://opendesktop.org/content/show.php?content=127149
@@ -59,12 +59,11 @@ Known issues:
 * On OpenGL, the render window may not be updated after resizing one of the docked windows. To fix this, resize the main window or minimize & restore
 * When loading resources.cfg, it attempts to load _all_ resources it founds, some of them may crash the viewer even if they're not materials
 * Free mode camera is not yet supported, despite being displayed in the menu
-* The "power" spin control in the light dialog doesn't work
 * In Linux, the colour picker dialogs don't work correctly.
 
 
 //----------------------------------------------------------------------
-//  Copyright (C) 2010-2011 Matias N. Goldberg ("dark_sylinc")
+//  Copyright (C) 2010-2012 Matias N. Goldberg ("dark_sylinc")
 //  This file is part of Ogre Meshy.
 //
 //  Ogre Meshy is free software: you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version May  4 2010)
 // http://www.wxformbuilder.org/
 //
@@ -506,7 +506,7 @@ wxLightsPanel::wxLightsPanel( wxWindow* parent, wxWindowID id, const wxPoint& po
 	wxStaticBoxSizer* sbSizer8;
 	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow1, wxID_ANY, wxT("Power") ), wxVERTICAL );
 	
-	m_spinPower = new wxSpinCtrl( m_scrolledWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 100, 1 );
+	m_spinPower = new wxSpinCtrl( m_scrolledWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxSP_ARROW_KEYS, 0, 10000, 1 );
 	sbSizer8->Add( m_spinPower, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	bSizer19->Add( sbSizer8, 0, wxALL|wxEXPAND, 5 );
@@ -616,6 +616,7 @@ wxLightsPanel::wxLightsPanel( wxWindow* parent, wxWindowID id, const wxPoint& po
 	m_button7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_button10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_choiceLightType->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( wxLightsPanel::OnLightTypeChange ), NULL, this );
+	m_button11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_diffusePickColour->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_specularPickColour->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 }
@@ -627,6 +628,7 @@ wxLightsPanel::~wxLightsPanel()
 	m_button7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_button10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_choiceLightType->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( wxLightsPanel::OnLightTypeChange ), NULL, this );
+	m_button11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_diffusePickColour->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	m_specularPickColour->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxLightsPanel::OnButtonClick ), NULL, this );
 	

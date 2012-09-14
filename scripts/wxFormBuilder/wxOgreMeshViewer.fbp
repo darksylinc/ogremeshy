@@ -2752,7 +2752,7 @@
                                                     <property name="window_extra_style"></property>
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
-                                                    <event name="OnButtonClick"></event>
+                                                    <event name="OnButtonClick">OnButtonClick</event>
                                                     <event name="OnChar"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
@@ -2946,14 +2946,14 @@
                                                             <property name="hidden">0</property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="initial">1</property>
-                                                            <property name="max">100</property>
+                                                            <property name="max">10000</property>
                                                             <property name="maximum_size">-1,-1</property>
                                                             <property name="min">0</property>
                                                             <property name="minimum_size"></property>
                                                             <property name="name">m_spinPower</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
-                                                            <property name="size">50,-1</property>
+                                                            <property name="size">70,-1</property>
                                                             <property name="style">wxSP_ARROW_KEYS</property>
                                                             <property name="subclass"></property>
                                                             <property name="tooltip"></property>
