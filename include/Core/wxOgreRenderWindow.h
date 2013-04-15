@@ -134,6 +134,9 @@ public:
 	*/
 	virtual void OnMouseEvents (wxMouseEvent &evt);
 
+	//Overload because wxAUI sets the size to 1x1 multiple times. Doesn't always work though.
+	virtual wxSize GetMinSize() const { return wxSize(256, 256); }
+
 protected:
 	/** Creates an Ogre render window for this widget.
 	*/

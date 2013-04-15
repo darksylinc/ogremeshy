@@ -174,10 +174,6 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 		m_lastOpenMeshDir	= cmdSettings.meshFullPath.substr( 0, pos );
 	}
 
-	//Connect some events
-	m_wxAuiManager->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler(
-							 MeshyMainFrameImpl::auiEventClose ), NULL, this );
-
 	createGrid();
 	showGrid();
 }
@@ -366,13 +362,13 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 
 	m_wxOgreRenderWindow->SetFocus();
 
-
 	createSystems();
 
 	//m_wxAuiManager->AddPane( m_wxOgreRenderWindow, wxLEFT|wxTOP, wxT("OGRE Render Window"));
 	m_wxAuiManager->AddPane( m_wxOgreRenderWindow, wxAuiPaneInfo().Name(wxT("RenderWindow")).
 													Caption(wxT("OGRE Render Window")).CenterPane().
-													PaneBorder(false).CloseButton(false) );
+													PaneBorder(false).MinSize( 256, 256 ).
+													CloseButton(false) );
 }
 
 //-----------------------------------------------------------------------------
@@ -425,32 +421,30 @@ void MeshyMainFrameImpl::createLogWindow( bool bShow )
 	if( !m_ogreLog )
 	{
 		m_ogreLog = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 500, 150 ),
-									wxNO_BORDER | wxTE_MULTILINE | wxTE_DONTWRAP | wxTE_RICH | wxTE_RICH2);
+									wxNO_BORDER | wxTE_MULTILINE | wxTE_DONTWRAP | wxTE_RICH | wxTE_RICH2 );
 		m_ogreLog->SetEditable( false );
-		m_ogreLog->Hide();
-	}
 
-	if( bShow )
-	{
-		//Already created, let's see if it needs to be shown again
-		if( !m_ogreLog->IsShown() )
-			m_ogreLog->Show( true );
-
-		wxAuiPaneInfo &logPane = m_wxAuiManager->GetPane( wxT("LogWindow") );
-
-		if( !logPane.IsOk() )
-		{
-			m_wxAuiManager->AddPane( m_ogreLog, wxAuiPaneInfo().Name(wxT("LogWindow")).
+		m_wxAuiManager->AddPane( m_ogreLog, wxAuiPaneInfo().Name(wxT("LogWindow")).
 									Caption(wxT("Ogre Log")).Bottom().Layer(0).Position(2).
 									LeftDockable(false).RightDockable(false).CloseButton().
 									DestroyOnClose(false) );
 
-			//Pane wasn't created, so look up again to get a working reference
-			logPane = m_wxAuiManager->GetPane( wxT("LogWindow") );
-		}
+		wxAuiPaneInfo &logPane = m_wxAuiManager->GetPane( wxT("LogWindow") );
+		logPane.Hide();
 
 		m_wxAuiManager->Update();
-		logPane.Show();
+	}
+
+	if( m_ogreLog && bShow )
+	{
+		//Already created, let's see if it needs to be shown again
+		if( !m_ogreLog->IsShown() )
+		{
+			//m_ogreLog->Show( true );
+			wxAuiPaneInfo &logPane = m_wxAuiManager->GetPane( wxT("LogWindow") );
+			logPane.Show();
+			m_wxAuiManager->Update();
+		}
 	}
 }
 
@@ -1627,10 +1621,4 @@ void MeshyMainFrameImpl::messageLogged( const Ogre::String& message, Ogre::LogMe
 		//HACK: Seems only way to smoothly move update it (may be wxWidgets bug?)
 		m_ogreLog->SetFocus();
 	}
-}
-
-void MeshyMainFrameImpl::auiEventClose(wxAuiManagerEvent& evt)
-{
-	if( evt.GetPane()->name == wxT("LogWindow") )
-		evt.GetPane()->Hide();
 }
