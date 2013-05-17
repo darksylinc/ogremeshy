@@ -1543,6 +1543,13 @@ void MeshyMainFrameImpl::OnMouseEvents( wxMouseEvent &evt )
 }
 
 void MeshyMainFrameImpl::messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml,
+										bool maskDebug, const Ogre::String &logName )
+{
+	bool skipThisMessage = false;
+	messageLogged( message, lml, maskDebug, logName, skipThisMessage );
+}
+
+void MeshyMainFrameImpl::messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml,
 													bool maskDebug, const Ogre::String &logName, bool& skipThisMessage )
 {
 	static const wxColour c_darkYellow( 130, 127, 0 );

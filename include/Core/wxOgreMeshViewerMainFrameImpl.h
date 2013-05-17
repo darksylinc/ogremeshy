@@ -137,7 +137,11 @@ public:
 
 	void OnMouseEvents( wxMouseEvent &evt );
 
-	void messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml,
+	// Ogre 1.7 compatibility
+	virtual void messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml,
+						bool maskDebug, const Ogre::String &logName );
+
+	virtual void messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml,
 						bool maskDebug, const Ogre::String &logName, bool& skipThisMessage );
 };
 

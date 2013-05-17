@@ -63,6 +63,10 @@ cp OgreMeshy ../bin/Release_Linux/OgreMeshy
 cd ../bin/Release_Linux
 make install
 
+!!! IMPORTANT: UBUNTU USERS !!!
+OgreMeshy needs to have RW access to the folder "/home/user/.ogremeshy". The script "make install" will login as root, and may create the folder for the root user as owner instead of the local user.
+To solve this problem, type "sudo make rootinstall" instead.
+
 
 Compiling under Mac OS X:
 =========================
