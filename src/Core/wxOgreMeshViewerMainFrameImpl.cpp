@@ -554,10 +554,7 @@ void MeshyMainFrameImpl::openMeshDialog()
 								wxT(""), wxT("*.mesh"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition);
  
 	if( openFileDialog.ShowModal() == wxID_OK )
-	{
-		m_lastOpenMeshDir = openFileDialog.GetDirectory().mb_str();
-		openMesh( m_lastOpenMeshDir, std::string( openFileDialog.GetFilename().mb_str() ) );
-	}
+		openMesh( std::string( openFileDialog.GetPath().mb_str() ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -576,7 +573,10 @@ void MeshyMainFrameImpl::openMesh( const std::string &fullPath )
 	const std::string meshName	= fullPath.substr( pos + 1 );
  
 	if( path != "" && meshName != "" )
+	{
+		m_lastOpenMeshDir = path;
 		openMesh( path, meshName );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -668,8 +668,10 @@ void MeshyMainFrameImpl::loadResourcesCfgDialog()
  
 	if( openFileDialog.ShowModal() == wxID_OK )
 	{
-		m_lastOpenResCfgDir = openFileDialog.GetDirectory();
-		loadResourcesCfg( openFileDialog.GetPath() );
+		wxString fullPath( openFileDialog.GetPath() );
+		const size_t pos	= fullPath.find_last_of("/\\");
+		m_lastOpenResCfgDir	= fullPath.substr( 0, pos );
+		loadResourcesCfg( fullPath );
 	}
 }
 
