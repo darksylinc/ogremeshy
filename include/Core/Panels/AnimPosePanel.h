@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-//	Copyright (C) 2011 Matias N. Goldberg ("dark_sylinc")
+//	Copyright (C) 2011-2013 Matias N. Goldberg ("dark_sylinc")
 //  This file is part of Ogre Meshy.
 //
 //  Ogre Meshy is free software: you can redistribute it and/or modify

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-//	Copyright (C) 2010-2011 Matias N. Goldberg ("dark_sylinc")
+//	Copyright (C) 2010-2013 Matias N. Goldberg ("dark_sylinc")
 //  This file is part of Ogre Meshy.
 //
 //  Ogre Meshy is free software: you can redistribute it and/or modify
@@ -532,7 +532,7 @@ void MeshyMainFrameImpl::showAboutBox()
 	info.SetVersion(wxT("1.5 for Linux beta"));
 #endif
     info.SetDescription(_T("Simple application to view mesh properties\n") + descLinked);
-    info.SetCopyright(_T("(C) 2010-2011 Matias N. Goldberg \"dark_sylinc\""));
+    info.SetCopyright(_T("(C) 2010-2013 Matias N. Goldberg \"dark_sylinc\""));
 	info.AddDeveloper(_T("Matias N. Goldberg - dark_sylinc"));
 	info.AddDeveloper(_T("Thomas Fischer - tdev"));
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));
