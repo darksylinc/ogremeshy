@@ -20,6 +20,7 @@
 #include <wx/wx.h>
 #include <wx/cmdline.h>     //for wxCmdLineParser
 #include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 #include "Core/wxOgreMeshViewerMainFrameImpl.h"
 
@@ -117,10 +118,7 @@ CmdSettings wxWidgetsApp::parseCmdLine() const
 //plugins.cfg & co. doesn't fail
 void wxWidgetsApp::setWorkingDirectory()
 {
-	//TODO: Replace with wxStandardPaths::GetExecutablePath and remove the wxApp::GetAppName() string
-	//in it
-	wxFileName fullAppPath( argv[0] );
-	fullAppPath.GetPath();
+	wxFileName fullAppPath( wxStandardPaths::Get().GetExecutablePath() );
 #ifdef __WXMSW__
 	SetCurrentDirectory( fullAppPath.GetPath() );
 #else

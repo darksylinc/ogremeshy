@@ -668,8 +668,8 @@ void MeshyMainFrameImpl::loadResourcesCfgDialog()
  
 	if( openFileDialog.ShowModal() == wxID_OK )
 	{
-		wxString fullPath( openFileDialog.GetPath() );
-		const size_t pos	= fullPath.find_last_of("/\\");
+		const wxString fullPath = openFileDialog.GetPath();
+		const size_t pos	= fullPath.find_last_of(wxT("/\\"));
 		m_lastOpenResCfgDir	= fullPath.substr( 0, pos );
 		loadResourcesCfg( fullPath );
 	}
