@@ -353,7 +353,7 @@
                             <event name="OnUpdateUI"></event>
                         </object>
                     </object>
-                    <object class="submenu" expanded="0">
+                    <object class="submenu" expanded="1">
                         <property name="label">Camera</property>
                         <property name="name">m_menu1</property>
                         <property name="permission">protected</property>
@@ -413,6 +413,56 @@
                             <property name="name">m_menuCamFreeLook</property>
                             <property name="permission">none</property>
                             <property name="shortcut">Alt+4</property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnMenuSelected</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                    </object>
+                    <object class="submenu" expanded="1">
+                        <property name="label">Coordinate Convention</property>
+                        <property name="name">m_menu3</property>
+                        <property name="permission">protected</property>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">1</property>
+                            <property name="help">X axis is &quot;up&quot;. Note width, height &amp; depth still reported as &quot;Y up&quot; convention</property>
+                            <property name="id">wxID_MENUCOORDINATE_X_UP</property>
+                            <property name="kind">wxITEM_CHECK</property>
+                            <property name="label">X Up</property>
+                            <property name="name">m_menuCoordXup</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnMenuSelected</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">1</property>
+                            <property name="help">Y axis is &quot;up&quot;</property>
+                            <property name="id">wxID_MENUCOORDINATE_Y_UP</property>
+                            <property name="kind">wxITEM_CHECK</property>
+                            <property name="label">Y Up</property>
+                            <property name="name">m_menuCoordYup</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
+                            <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">OnMenuSelected</event>
+                            <event name="OnUpdateUI"></event>
+                        </object>
+                        <object class="wxMenuItem" expanded="1">
+                            <property name="bitmap"></property>
+                            <property name="checked">0</property>
+                            <property name="enabled">1</property>
+                            <property name="help">Z axis is &quot;up&quot;. Note width, height &amp; depth still reported as &quot;Y up&quot; convention</property>
+                            <property name="id">wxID_MENUCOORDINATE_Z_UP</property>
+                            <property name="kind">wxITEM_CHECK</property>
+                            <property name="label">Z Up</property>
+                            <property name="name">m_menuCoordZup</property>
+                            <property name="permission">none</property>
+                            <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
                             <event name="OnMenuSelection">OnMenuSelected</event>
                             <event name="OnUpdateUI"></event>

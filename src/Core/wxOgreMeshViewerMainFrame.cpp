@@ -108,6 +108,21 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_menuView->Append( -1, wxT("Camera"), m_menu1 );
 	
+	m_menu3 = new wxMenu();
+	wxMenuItem* m_menuCoordXup;
+	m_menuCoordXup = new wxMenuItem( m_menu3, wxID_MENUCOORDINATE_X_UP, wxString( wxT("X Up") ) , wxT("X axis is \"up\". Note width, height & depth still reported as \"Y up\" convention"), wxITEM_CHECK );
+	m_menu3->Append( m_menuCoordXup );
+	
+	wxMenuItem* m_menuCoordYup;
+	m_menuCoordYup = new wxMenuItem( m_menu3, wxID_MENUCOORDINATE_Y_UP, wxString( wxT("Y Up") ) , wxT("Y axis is \"up\""), wxITEM_CHECK );
+	m_menu3->Append( m_menuCoordYup );
+	
+	wxMenuItem* m_menuCoordZup;
+	m_menuCoordZup = new wxMenuItem( m_menu3, wxID_MENUCOORDINATE_Z_UP, wxString( wxT("Z Up") ) , wxT("Z axis is \"up\". Note width, height & depth still reported as \"Y up\" convention"), wxITEM_CHECK );
+	m_menu3->Append( m_menuCoordZup );
+	
+	m_menuView->Append( -1, wxT("Coordinate Convention"), m_menu3 );
+	
 	wxMenuItem* m_menuBgColour;
 	m_menuBgColour = new wxMenuItem( m_menuView, wxID_MENUCHANGEBGCOLOUR, wxString( wxT("Change background colour...") ) , wxT("Changes the (\"clear\") colour of the background"), wxITEM_NORMAL );
 	m_menuView->Append( m_menuBgColour );
@@ -170,6 +185,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxID_MENUCAMERAORIGIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUCAMCENTERMESH, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUCAMFREELOOK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Connect( wxID_MENUCOORDINATE_X_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Connect( wxID_MENUCOORDINATE_Y_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Connect( wxID_MENUCOORDINATE_Z_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUCHANGEBGCOLOUR, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUGRIDSETTINGS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUVIEWLOG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
@@ -204,6 +222,9 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_MENUCAMERAORIGIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUCAMCENTERMESH, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUCAMFREELOOK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Disconnect( wxID_MENUCOORDINATE_X_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Disconnect( wxID_MENUCOORDINATE_Y_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Disconnect( wxID_MENUCOORDINATE_Z_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUCHANGEBGCOLOUR, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUGRIDSETTINGS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUVIEWLOG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );

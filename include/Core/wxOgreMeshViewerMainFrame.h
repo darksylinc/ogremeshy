@@ -65,6 +65,9 @@ class MainFrame : public wxFrame
 			wxID_MENUCAMERAORIGIN,
 			wxID_MENUCAMCENTERMESH,
 			wxID_MENUCAMFREELOOK,
+			wxID_MENUCOORDINATE_X_UP,
+			wxID_MENUCOORDINATE_Y_UP,
+			wxID_MENUCOORDINATE_Z_UP,
 			wxID_MENUCHANGEBGCOLOUR,
 			wxID_MENUGRIDSETTINGS,
 			wxID_MENUVIEWLOG,
@@ -77,6 +80,7 @@ class MainFrame : public wxFrame
 		wxMenu* m_menuView;
 		wxMenu* m_boneSubmenu;
 		wxMenu* m_menu1;
+		wxMenu* m_menu3;
 		wxMenu* m_menuAbout;
 		wxToolBar* m_toolBar;
 		wxStatusBar* m_statusBar1;

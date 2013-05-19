@@ -45,6 +45,13 @@
 	#include <shlobj.h>
 #endif
 
+const Ogre::Quaternion c_CoordConventions[NumCoordinateConvention] =
+{
+	Ogre::Quaternion( Ogre::Degree( -90.0f ), Ogre::Vector3::UNIT_Z ),
+	Ogre::Quaternion::IDENTITY,
+	Ogre::Quaternion( Ogre::Degree( 90.0f ), Ogre::Vector3::UNIT_X )
+};
+
 MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmdSettings ) :
 			MainFrame( parent ),
 			m_wxAuiManager( 0 ),
@@ -71,7 +78,8 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 			m_wasLeftPressed( false ),
 			m_wasRightPressed( false ),
 			m_mouseX( 0 ),
-			m_mouseY( 0 )
+			m_mouseY( 0 ),
+			m_coordinateConvention( COORD_Y_UP )
 {
 #ifndef __WXMSW__
 	//Set config directory to user home directory
@@ -176,6 +184,9 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 
 	createGrid();
 	showGrid();
+
+	//Apply settings
+	setCoordinateConvention( m_coordinateConvention );
 }
 
 MeshyMainFrameImpl::~MeshyMainFrameImpl()
@@ -224,6 +235,7 @@ void MeshyMainFrameImpl::saveSettings()
 			myFile << "CellDepth = "		<< m_cellDepth			<< "\n";
 			myFile << "BoneNameColour = "	<< std::hex <<
 								m_animationPanel->getBoneNameColour().getAsABGR() << "\n";
+			myFile << "CoordConvention = "	<< std::dec << m_coordinateConvention << "\n";
 
 			if( m_lightsPanel )
 				m_lightsPanel->saveSettings( myFile );
@@ -296,6 +308,13 @@ void MeshyMainFrameImpl::loadSettings()
 						m_cellWidth = Ogre::StringConverter::parseReal( i->second );
 					else if( i->first == "CellDepth" )
 						m_cellDepth = Ogre::StringConverter::parseReal( i->second );
+
+					else if( i->first == "CoordConvention" )
+					{
+						int value = Ogre::StringConverter::parseInt( i->second, 1 );
+						if( value >= COORD_X_UP && value < NumCoordinateConvention )
+							m_coordinateConvention = static_cast<CoordinateConvention>( value );
+					}
 
 					else if( i->first == "BoneNameColour" )
 					{
@@ -381,7 +400,8 @@ void MeshyMainFrameImpl::createSystems()
 	m_sceneManager	= m_root->createSceneManager( Ogre::ST_GENERIC, "ExampleSMInstance" );
 	m_camera		= m_sceneManager->createCamera( "Main Camera" );
 
-	m_cameraNode = m_sceneManager->getRootSceneNode()->createChildSceneNode( "Camera Node" );
+	m_cameraNode = m_sceneManager->getRootSceneNode()->createChildSceneNode( "Camera Node 0" );
+	m_cameraNode = m_cameraNode->createChildSceneNode( "Camera Node" );
 	m_cameraNode->attachObject( m_camera );
 	m_cameraNode->pitch( Ogre::Degree( -45.0f ) );
 
@@ -538,6 +558,7 @@ void MeshyMainFrameImpl::showAboutBox()
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));
 	info.AddArtist( wxT("\nMatias N. Goldberg") );
 	info.AddArtist( wxT("\nRogerio de Souza Santos (File.png, Reload.png & ChangeBGColour.png)") );
+	info.SetWebSite( wxT( "www.yosoygames.com.ar" ), wxT( "Please donate" ) );
 
     wxAboutBox( info );
 }
@@ -1102,6 +1123,26 @@ void MeshyMainFrameImpl::viewGridSettings()
 }
 
 //-----------------------------------------------------------------------------
+//setCoordinateConvention()
+//Description:
+//	Sets the new coordinate convention to all relevant nodes, and sets
+//	the GUI checked properly
+//Input:
+//	1) New convention
+//-----------------------------------------------------------------------------
+void MeshyMainFrameImpl::setCoordinateConvention( CoordinateConvention newConvention )
+{
+	m_coordinateConvention = newConvention;
+	m_cameraNode->getParent()->setOrientation( c_CoordConventions[m_coordinateConvention] );
+	if( m_gridNode )
+		m_gridNode->setOrientation( c_CoordConventions[m_coordinateConvention] );
+
+	m_menuView->Check( wxID_MENUCOORDINATE_X_UP, m_coordinateConvention == COORD_X_UP );
+	m_menuView->Check( wxID_MENUCOORDINATE_Y_UP, m_coordinateConvention == COORD_Y_UP );
+	m_menuView->Check( wxID_MENUCOORDINATE_Z_UP, m_coordinateConvention == COORD_Z_UP );
+}
+
+//-----------------------------------------------------------------------------
 //defaultCamera()
 //Description:
 //	Defaults camera position to 0, centerY, 0, with the default angle,
@@ -1484,6 +1525,19 @@ void MeshyMainFrameImpl::OnMenuSelected( wxCommandEvent& event )
 			break;
 		case wxID_MENUCAMCENTERMESH:
 			centerMeshCamera();
+			break;
+	//Submenu Coordinate Convention
+		case wxID_MENUCOORDINATE_X_UP:
+			setCoordinateConvention( COORD_X_UP );
+			defaultCamera();
+			break;
+		case wxID_MENUCOORDINATE_Y_UP:
+			setCoordinateConvention( COORD_Y_UP );
+			defaultCamera();
+			break;
+		case wxID_MENUCOORDINATE_Z_UP:
+			setCoordinateConvention( COORD_Z_UP );
+			defaultCamera();
 			break;
 	//End submenu
 	case wxID_MENUCHANGEBGCOLOUR:
