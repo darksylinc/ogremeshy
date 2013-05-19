@@ -4,6 +4,7 @@ Fixed crash when opening a mesh that didn't contain index data.
 Light's Power Spin control now works.
 Light's direction normalize buttons wasn't working. Fixed.
 Fixed several issues with some Linux distros (thanks guidry!). Ubuntu users should type make ubuntuinstall
+Added support for different coordinate conventions (X up & Z up)
 
 [1.4]
 Added ability to take screenshots with F12 key. They're saved in the documents folder.
