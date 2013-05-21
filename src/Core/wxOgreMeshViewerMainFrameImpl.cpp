@@ -1164,7 +1164,8 @@ void MeshyMainFrameImpl::defaultCamera()
 		m_camera->setPosition( Ogre::Vector3::UNIT_Z * m_meshEntity->getBoundingRadius() * 1.8f );
 		m_cameraNode->setOrientation( Ogre::Quaternion::IDENTITY );
 		m_cameraNode->pitch( Ogre::Degree( -45.0f ) );
-		m_cameraNode->setPosition( vCenter );
+		m_cameraNode->getParent()->setPosition( vCenter );
+		m_cameraNode->setPosition( Ogre::Vector3::ZERO );
 	}
 	else
 		originCamera();
@@ -1184,6 +1185,7 @@ void MeshyMainFrameImpl::originCamera()
 	m_camera->setPosition( Ogre::Vector3::UNIT_Z * factor );
 	m_cameraNode->setOrientation( Ogre::Quaternion::IDENTITY );
 	m_cameraNode->pitch( Ogre::Degree( -45.0f ) );
+	m_cameraNode->getParent()->setPosition( Ogre::Vector3::ZERO );
 	m_cameraNode->setPosition( Ogre::Vector3::ZERO );
 }
 
@@ -1203,7 +1205,8 @@ void MeshyMainFrameImpl::centerMeshCamera()
 		m_camera->setPosition( Ogre::Vector3::UNIT_Z * m_meshEntity->getBoundingRadius() * 1.8f );
 		m_cameraNode->setOrientation( Ogre::Quaternion::IDENTITY );
 		m_cameraNode->pitch( Ogre::Degree( -45.0f ) );
-		m_cameraNode->setPosition( vCenter );
+		m_cameraNode->getParent()->setPosition( vCenter );
+		m_cameraNode->setPosition( Ogre::Vector3::ZERO );
 	}
 }
 
