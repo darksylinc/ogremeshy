@@ -6,6 +6,9 @@ Light's direction normalize buttons wasn't working. Fixed.
 Fixed several issues with some Linux distros (thanks guidry!). Ubuntu users should type make ubuntu_install
 Added support for different coordinate conventions (X up & Z up)
 Now OgreMeshy is in charge of creating .ogremeshy folder in Linux version, also checks for access restrictions to the folder.
+Switched rendering method, now we overload "OnInternalIdle" instead of using a Timer based solution:
+    * Windows: OgreMeshy wouldn't exit if rendering took significantly longer than 10ms (i.e. 80ms). Had to be killed from Task Mgr
+    * Linux: GUI became extremely unresponsive & laggy if rendering took just a bit more than 10ms
 
 [1.4]
 Added ability to take screenshots with F12 key. They're saved in the documents folder.
