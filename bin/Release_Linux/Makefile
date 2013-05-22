@@ -11,11 +11,9 @@ rootinstall:
 	ln -s -f /opt/ogremeshy/OgreMeshy /usr/bin/ogremeshy
 
 install:
-	mkdir -p $(HOME)/.ogremeshy
 	su root -c make rootinstall
 	
-ubuntuinstall:
-	mkdir -p $(HOME)/.ogremeshy
+ubuntu_install:
 	sudo make rootinstall
 
 rootuninstall:
@@ -25,3 +23,7 @@ rootuninstall:
 uninstall:
 	rm -r $(HOME)/.ogremeshy
 	su root -c make rootuninstall
+	
+ubuntu_uninstall:
+	rm -r $(HOME)/.ogremeshy
+	sudo make rootuninstall

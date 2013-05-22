@@ -84,6 +84,31 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 #ifndef __WXMSW__
 	//Set config directory to user home directory
 	m_configDirectory = std::string(wxGetHomeDir().mb_str()) + "/.ogremeshy/";
+	{
+		wxString configDir( m_configDirectory.c_str(), wxConvUTF8 );
+		if( !wxDirExists( configDir ) )
+		{
+			if( !wxMkdir( configDir ) )
+			{
+				wxMessageBox( wxT( "Warning, no R/W access to " ) + configDir +
+								wxT( "\nOgre Meshy may not function properly or crash" ),
+								wxT("ACCESS ERROR"),
+								wxOK|wxICON_ERROR|wxCENTRE );
+				m_configDirectory = "";
+			}
+		}
+		else
+		{
+			//Folder already exists, but we don't own it
+			if( !wxIsReadable( configDir ) || !wxIsWritable( configDir ) )
+			{
+				wxMessageBox( wxT( "Warning, no R/W access to " ) + configDir +
+								wxT( "\nOgre Meshy may not function properly or crash" ),
+								wxT("ACCESS ERROR"),
+								wxOK|wxICON_ERROR|wxCENTRE );
+			}
+		}
+	}
 #else
 	//TODO: Use wxStandardPaths::GetUserConfigDir()
 	//Windows: use User/AppData
@@ -543,7 +568,8 @@ void MeshyMainFrameImpl::showAboutBox()
 								" (" OGRE_VERSION_SUFFIX ", " OGRE_VERSION_NAME ")";
 	wxString descLinked = wxString( ("\nLinked against:\n"
 							"\t* Ogre " + ogreVersion + "\n"
-							"\t* wxWidgets " ).c_str(), wxConvUTF8 ) + wxVERSION_NUM_DOT_STRING_T;
+							"\t* wxWidgets " ).c_str(), wxConvUTF8 ) + wxVERSION_NUM_DOT_STRING_T +
+							wxString( "\n", wxConvUTF8 );
 
 	info.SetName(_T("Ogre Meshy"));
 #ifdef __WXMSW__
@@ -558,7 +584,7 @@ void MeshyMainFrameImpl::showAboutBox()
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));
 	info.AddArtist( wxT("\nMatias N. Goldberg") );
 	info.AddArtist( wxT("\nRogerio de Souza Santos (File.png, Reload.png & ChangeBGColour.png)") );
-	info.SetWebSite( wxT( "www.yosoygames.com.ar" ), wxT( "Please donate" ) );
+	info.SetWebSite( wxT( "www.yosoygames.com.ar" ), wxT( "\\*  PLEASE DONATE  */" ) );
 
     wxAboutBox( info );
 }
