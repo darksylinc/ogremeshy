@@ -27,9 +27,6 @@ protected:
 	/// This control's own render window reference.
 	Ogre::RenderWindow *mRenderWindow;
 
-	/// Timer to sync the rendering to a "constant" frame rate.
-	wxTimer *mRenderTimer;
-
 	/// The Id of the next render window
 	static unsigned int msNextRenderWindowId;
 
@@ -97,12 +94,6 @@ public:
 	*/
 	Ogre::RenderWindow *GetRenderWindow () const;
 
-	/** Sets the render timer period.
-	@param period The number of milliseconds before the next notification.
-	A negative or zero value will stop the timer.
-	*/
-	void SetRenderTimerPeriod (int period);
-
 	/** Sets the mouse events callback.
 	@param callback The callback function.
 	*/
@@ -117,10 +108,9 @@ public:
 	*/
 	virtual void OnPaint (wxPaintEvent &evt);
 
-	/** Render timer event callback.
-	@param evt Data regarding the timer event.
+	/** Allows rendering once per frame
 	*/
-	virtual void OnRenderTimer (wxTimerEvent &evt);
+	virtual void OnInternalIdle();
 
 	/** Resizing events callback.
 	@param evt Data regarding the resize event.

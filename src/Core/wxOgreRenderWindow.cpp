@@ -9,15 +9,12 @@
 #include <GL/glx.h>
 #endif
 
-const wxWindowID ID_RENDERTIMER = wxNewId ();
-
 IMPLEMENT_CLASS (wxOgreRenderWindow, wxControl)
 
 BEGIN_EVENT_TABLE (wxOgreRenderWindow, wxControl)
 #ifndef __WXMSW__
 EVT_PAINT (wxOgreRenderWindow::OnPaint)
 #endif
-EVT_TIMER (ID_RENDERTIMER, wxOgreRenderWindow::OnRenderTimer)
 EVT_SIZE (wxOgreRenderWindow::OnSize)
 EVT_MOUSE_EVENTS (wxOgreRenderWindow::OnMouseEvents)
 END_EVENT_TABLE ()
@@ -63,9 +60,6 @@ wxOgreRenderWindow::~wxOgreRenderWindow ()
 		msOgreRoot->detachRenderTarget (mRenderWindow);*/
 
 	mRenderWindow = 0;
-
-	if (mRenderTimer)
-		delete mRenderTimer;
 }
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::Init ()
@@ -74,9 +68,6 @@ void wxOgreRenderWindow::Init ()
 
 	// Callbacks
 	mRenderWindowListener = 0;
-
-	mRenderTimer = new wxTimer (this, ID_RENDERTIMER);
-	mRenderTimer->Start( 10 );
 }
 //------------------------------------------------------------------------------
 inline wxSize wxOgreRenderWindow::DoGetBestSize () const
@@ -98,17 +89,6 @@ void wxOgreRenderWindow::SetOgreRoot (Ogre::Root *root)
 Ogre::RenderWindow *wxOgreRenderWindow::GetRenderWindow () const
 {
 	return mRenderWindow;
-}
-//------------------------------------------------------------------------------
-void wxOgreRenderWindow::SetRenderTimerPeriod (int period)
-{
-	if (!mRenderTimer)
-		return;
-
-	if (period <= 0)
-		mRenderTimer->Stop ();
-	else
-		mRenderTimer->Start (period);
 }
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::Update ()
@@ -133,9 +113,14 @@ void wxOgreRenderWindow::OnPaint (wxPaintEvent &evt)
 	Update ();
 }
 //------------------------------------------------------------------------------
-void wxOgreRenderWindow::OnRenderTimer (wxTimerEvent &evt)
+void wxOgreRenderWindow::OnInternalIdle()
 {
-	Update ();
+	wxControl::OnInternalIdle();
+	if( wxUpdateUIEvent::CanUpdate(this) && IsShown() )
+	{
+		Refresh();
+		Update();
+	}
 }
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::OnSize (wxSizeEvent &evt)
@@ -180,10 +165,8 @@ void wxOgreRenderWindow::CreateRenderWindow ()
 #endif
 	//params["useNVPerfHUD"] = "Yes";
 
-#ifdef __WXMSW__
-	//Enforce vsync only in Windows. In Linux the GUI becomes waaaaaaay laggy
+	//Enforce vsync to avoid hogging the CPU unnecessarily
 	params["vsync"] = "true"; 
-#endif
 
 	// Get wx control window size
 	int width;
