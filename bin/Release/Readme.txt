@@ -51,9 +51,6 @@ Linux specific:
 Q: I get to the Render API OpenGL selection screen, hit ok, and then the program exits.
 A: Check the folder "~/.ogremeshy" exists, which is where Ogre Meshy saves all config data. (i.e. /home/myusername/.ogremeshy)
 
-Q: Selecting a background colour or a bone text colour results always in black
-A: This is a known issue. The bone text colour can be changed by manually editing the text file "~/.ogremeshy/UserSettings.cfg" and modifying the "BoneNameColour" field (the number is in hex). There's no way to change the background colour yet.
-
 Q: The program exits right after saying 'Loading Plugin CgProgramManager' in the console, it doesn't even show up a window
 A: Make sure Cg libs are installed. If it still fails or you don't want to install them, edit plugins.cfg with a text editor and remove that plugin.
 
@@ -67,7 +64,6 @@ KNOWN ISSUES:
 * On OpenGL, the render window may not be updated after resizing one of the docked windows. To fix this, resize the main window or minimize & restore
 * When loading resources.cfg, it attempts to load _all_ resources it founds, some of them may crash the viewer even if they're not materials
 * Free mode camera is not yet supported, despite being displayed in the menu
-* In Linux, the colour picker dialogs don't work correctly.
 
 THANKS:
 ======
