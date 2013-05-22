@@ -3,7 +3,7 @@ Fixed weird docking windows behavior when floating.
 Fixed crash when opening a mesh that didn't contain index data.
 Light's Power Spin control now works.
 Light's direction normalize buttons wasn't working. Fixed.
-Fixed several issues with some Linux distros (thanks guidry!). Ubuntu users should type make ubuntuinstall
+Fixed several issues with some Linux distros (thanks guidry!). Ubuntu users should type make ubuntu_install
 Added support for different coordinate conventions (X up & Z up)
 Now OgreMeshy is in charge of creating .ogremeshy folder in Linux version, also checks for access restrictions to the folder.
 
