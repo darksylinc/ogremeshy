@@ -3,7 +3,7 @@
 ;--------------------------------
 ; You must define these values
 
-  !define VERSION "1.4.0"
+  !define VERSION "1.5.0"
   !define PATCH  "0"
   !define INST_DIR "../../bin/Release"
 
@@ -32,7 +32,7 @@
 
   ;Name and file
   Name "OgreMeshy"
-  OutFile "OgreMeshy-1.4-Win32.exe"
+  OutFile "OgreMeshy-1.5-Win32.exe"
 
   ;Set compression
   SetCompressor lzma
@@ -660,10 +660,10 @@ Section "-Core installation"
   Push "OgreMeshy"
   Call ConditionalAddToRegisty
   Push "DisplayVersion"
-  Push "1.4.0"
+  Push "1.5.0"
   Call ConditionalAddToRegisty
   Push "Publisher"
-  Push "http://www.ogre3d.org/tikiwiki/Ogre+Meshy"
+  Push "Matias N. Goldberg"
   Call ConditionalAddToRegisty
   Push "UninstallString"
   Push "$INSTDIR\Uninstall.exe"
@@ -855,6 +855,7 @@ ContinueUninstall:
   Delete "$INSTDIR\LICENSE.txt"
   Delete "$INSTDIR\OgreMain.dll"
   Delete "$INSTDIR\OgreMeshy.exe"
+  Delete "$INSTDIR\OgreOverlay.dll"
   Delete "$INSTDIR\Plugins\cg.dll"
   Delete "$INSTDIR\Plugins\Plugin_CgProgramManager.dll"
   Delete "$INSTDIR\Plugins\Plugin_OctreeSceneManager.dll"

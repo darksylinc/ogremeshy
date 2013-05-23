@@ -12,6 +12,8 @@
 
 namespace Ogre
 { 
+	class Font;
+
 	class MovableText : public MovableObject, public Renderable 
 	{ 
 		/******************************** MovableText data ****************************/ 
