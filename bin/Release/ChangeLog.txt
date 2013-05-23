@@ -9,6 +9,7 @@ Now OgreMeshy is in charge of creating .ogremeshy folder in Linux version, also 
 Switched rendering method, now we overload "OnInternalIdle" instead of using a Timer based solution:
     * Windows: OgreMeshy wouldn't exit if rendering took significantly longer than 10ms (i.e. 80ms). Had to be killed from Task Mgr
     * Linux: GUI became extremely unresponsive & laggy if rendering took just a bit more than 10ms
+By default Cg Program manager is not enabled by default in Linux now (due to library dependencies)
 
 [1.4]
 Added ability to take screenshots with F12 key. They're saved in the documents folder.

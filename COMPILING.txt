@@ -28,6 +28,8 @@ You'll need wxWidgets 2.8 or higher
 You'll need dev OGRE installed in your system
 You'll need OpenGL dev libraries (they usually come with Mesa or X11)
 
+Note: If you're using Ogre 1.8 or lower instead of 1.9; overwrite rename 'CMakeLists.old.1.8.txt' as 'CMakeLists.txt'
+
 Copy all necessary Resources files to folder bin/Release_Linux/Resources; the following script will do that for you:
 	cd scripts/Resources
 	sh copyresources.sh
