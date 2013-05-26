@@ -90,6 +90,8 @@ class MeshyMainFrameImpl : public MainFrame, public wxOgreRenderWindowListener,
 	float				m_cellWidth;
 	float				m_cellDepth;
 
+	unsigned short		m_numRuns; //Used to display donation message
+
 	//Control camera movement through mouse
 	bool				m_wasLeftPressed;
 	bool				m_wasRightPressed;

@@ -52,6 +52,10 @@ const Ogre::Quaternion c_CoordConventions[NumCoordinateConvention] =
 	Ogre::Quaternion( Ogre::Degree( 90.0f ), Ogre::Vector3::UNIT_X )
 };
 
+//Increases on each release
+#define OGRE_MESHY_VERSION_NUMBER 0
+#define OGRE_MESHY_NUM_RUNS_BEFORE_MSG 7	//Display donation msg after running Meshy N times
+
 MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmdSettings ) :
 			MainFrame( parent ),
 			m_wxAuiManager( 0 ),
@@ -75,6 +79,7 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 			m_cellSize( 1 ),
 			m_cellWidth( 50 ),
 			m_cellDepth( 50 ),
+			m_numRuns( 0 ),
 			m_wasLeftPressed( false ),
 			m_wasRightPressed( false ),
 			m_mouseX( 0 ),
@@ -184,6 +189,22 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 
 	loadSettings();
 
+	if( m_numRuns == OGRE_MESHY_NUM_RUNS_BEFORE_MSG )
+	{
+		wxAboutDialogInfo info;
+		info.SetName(_T("Please Donate"));
+		info.SetDescription(
+wxT("It seems you like Ogre Meshy. This program is free, and as such you're not required to pay.\n")
+wxT("If you really enjoy this program, we would like to ask you to donate by clicking the link below.\n")
+wxT("It really helps us maintaining this program. This message will appear only once.\n")
+wxT("If the link doesn't work, use this url: www.yosoygames.com.ar/wp/ogre-meshy\n")
+wxT("Thank you :)"));
+		info.SetWebSite( wxT( "http://www.yosoygames.com.ar/wp/ogre-meshy/" ),
+						 wxT( ">>  PLEASE DONATE  <<" ) );
+		wxAboutBox( info );
+	}
+	++m_numRuns;
+
 	if( cmdSettings.resoucesCfgPath != wxT("") )
 		loadResourcesCfg( cmdSettings.resoucesCfgPath );
 
@@ -261,6 +282,8 @@ void MeshyMainFrameImpl::saveSettings()
 			myFile << "BoneNameColour = "	<< std::hex <<
 								m_animationPanel->getBoneNameColour().getAsABGR() << "\n";
 			myFile << "CoordConvention = "	<< std::dec << m_coordinateConvention << "\n";
+			myFile << "RunCount = "			<< m_numRuns			<< "\n";
+			myFile << "Version = "			<< OGRE_MESHY_VERSION_NUMBER<< "\n";
 
 			if( m_lightsPanel )
 				m_lightsPanel->saveSettings( myFile );
@@ -298,6 +321,8 @@ void MeshyMainFrameImpl::loadSettings()
 
 		Ogre::ConfigFile cf;
 		cf.load( m_configDirectory + c_userSettingsFile );
+
+		bool newVersion = true;
 
 		//Go through all sections & settings in the file
 		Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
@@ -341,6 +366,21 @@ void MeshyMainFrameImpl::loadSettings()
 							m_coordinateConvention = static_cast<CoordinateConvention>( value );
 					}
 
+					else if( i->first == "RunCount" )
+					{
+						m_numRuns = std::min<unsigned short>(
+											Ogre::StringConverter::parseInt( i->second ),
+											OGRE_MESHY_NUM_RUNS_BEFORE_MSG+1 );
+					}
+					else if( i->first == "Version" )
+					{
+						if( Ogre::StringConverter::parseInt( i->second, -1 ) ==
+							OGRE_MESHY_VERSION_NUMBER )
+						{
+							newVersion = false;
+						}
+					}
+
 					else if( i->first == "BoneNameColour" )
 					{
 						unsigned long lValue;
@@ -355,6 +395,9 @@ void MeshyMainFrameImpl::loadSettings()
 				}
 			}
 		}
+
+		if( newVersion )
+			m_numRuns = 0;
 
 		if( bRemoveDefaultLight )
 			m_lightsPanel->removeDefaultLight();
@@ -584,7 +627,8 @@ void MeshyMainFrameImpl::showAboutBox()
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));
 	info.AddArtist( wxT("\nMatias N. Goldberg") );
 	info.AddArtist( wxT("\nRogerio de Souza Santos (File.png, Reload.png & ChangeBGColour.png)") );
-	info.SetWebSite( wxT( "www.yosoygames.com.ar" ), wxT( "\\*  PLEASE DONATE  */" ) );
+	info.SetWebSite( wxT( "http://www.yosoygames.com.ar/wp/ogre-meshy/" ),
+					 wxT( ">>*  PLEASE DONATE  <<" ) );
 
     wxAboutBox( info );
 }
