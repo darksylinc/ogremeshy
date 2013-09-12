@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version May  4 2010)
 // http://www.wxformbuilder.org/
 //
@@ -73,6 +73,7 @@ class MainFrame : public wxFrame
 			wxID_MENUVIEWLOG,
 			wxID_MENUVIEWRENDERWINDOW,
 			wxID_MENUABOUTABOUT,
+			wxID_MENUUSERTSS,
 		};
 		
 		wxMenuBar* m_menuBar;

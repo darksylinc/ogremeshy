@@ -68,6 +68,11 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxMenuItem* m_menuShowGrid;
 	m_menuShowGrid = new wxMenuItem( m_menuView, wxID_MENUSHOWGRID, wxString( wxT("Show Grid") ) + wxT('\t') + wxT("Ctrl+G"), wxT("Shows or hides the grid"), wxITEM_CHECK );
 	m_menuView->Append( m_menuShowGrid );
+
+	wxMenuItem* m_menuUseRTSS;
+	m_menuUseRTSS = new wxMenuItem( m_menuView, wxID_MENUUSERTSS, wxString( wxT("Use RTSS") ) + wxT('\t') + wxT("Ctrl+R"), wxT("Toggle RTSS mode"), wxITEM_CHECK );
+	m_menuView->Append( m_menuUseRTSS);
+	
 	
 	wxMenuItem* m_menuToggleWireframe;
 	m_menuToggleWireframe = new wxMenuItem( m_menuView, wxID_MENUTOGGLEWIREFRAME, wxString( wxT("Toggle Wireframe") ) + wxT('\t') + wxT("Ctrl+W"), wxT("Turns wireframe mode on & off"), wxITEM_CHECK );
@@ -178,6 +183,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( wxID_MENUSHOWBONES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUSHOWBOUNDINGBOX, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUSHOWGRID, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Connect( wxID_MENUUSERTSS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUTOGGLEWIREFRAME, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUSHOWBONENAMES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Connect( wxID_MENUCHANGENAMECOLOUR, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
@@ -215,6 +221,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_MENUSHOWBONES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUSHOWBOUNDINGBOX, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUSHOWGRID, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
+	this->Disconnect( wxID_MENUUSERTSS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUTOGGLEWIREFRAME, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUSHOWBONENAMES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
 	this->Disconnect( wxID_MENUCHANGENAMECOLOUR, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnMenuSelected ) );
