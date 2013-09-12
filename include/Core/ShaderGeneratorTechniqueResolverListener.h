@@ -4,7 +4,7 @@
 #include "OgreStringVector.h"
 #include "OgreRTShaderSystem.h"
 #include "OgreShaderGenerator.h"
-#define _RTSS_WRITE_SHADERS_TO_DISK 1
+#define _RTSS_WRITE_SHADERS_TO_DISK 0
 class ShaderGeneratorTechniqueResolverListener : public Ogre::MaterialManager::Listener
 {
 public:
