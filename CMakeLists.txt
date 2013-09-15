@@ -44,6 +44,9 @@ include( "${wxWidgets_USE_FILE}" )
 
 FIND_PACKAGE(OGRE COMPONENTS Overlay REQUIRED)
 include_directories( ${OGRE_INCLUDE_DIRS} )
+foreach(dir ${OGRE_INCLUDE_DIRS})
+   set(OGRE_Overlay_INCLUDE_DIR ${dir}/Overlay ${OGRE_Overlay_INCLUDE_DIR})
+endforeach(dir)
 include_directories( ${OGRE_Overlay_INCLUDE_DIR} )
 
 if(UNIX)
@@ -94,9 +97,11 @@ if(WIN32)
 	set (SOURCE_FILES ${SOURCE_FILES} ${OgreMeshy_SOURCE_DIR}/scripts/Resources/Resource.rc)
 endif()
 
+link_directories(${OGRE_LIBRARY_DIRS})
 ADD_EXECUTABLE(OgreMeshy WIN32 ${HEADER_FILES} ${SOURCE_FILES} )
 TARGET_LINK_LIBRARIES( OgreMeshy ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES( OgreMeshy ${OGRE_LIBRARIES} )
+set(OGRE_Overlay_LIBRARIES OgreOverlay)
 TARGET_LINK_LIBRARIES( OgreMeshy ${OGRE_Overlay_LIBRARIES} )
 
 if(UNIX)
