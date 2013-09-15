@@ -14,7 +14,7 @@ if(WIN32)
 	set(CMAKE_SUPPRESS_REGENERATION true)
 
 	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-	#set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};E:/Projects/SDK/Ogre/CMake/Utils/;E:/Projects/SDK/Ogre/CMake/Packages/")
+	#set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};E:/Projects/SDK/OgreLatest/CMake/Utils/;E:/Projects/SDK/OgreLatest/CMake/Packages/")
 endif()
 
 if(UNIX)
@@ -46,8 +46,10 @@ FIND_PACKAGE(OGRE COMPONENTS Overlay REQUIRED)
 include_directories( ${OGRE_INCLUDE_DIRS} )
 foreach(dir ${OGRE_INCLUDE_DIRS})
    set(OGRE_Overlay_INCLUDE_DIR ${dir}/Overlay ${OGRE_Overlay_INCLUDE_DIR})
+   set(OGRE_RTSS_INCLUDE_DIR ${dir}/RTShaderSystem ${OGRE_RTSS_INCLUDE_DIR})
 endforeach(dir)
 include_directories( ${OGRE_Overlay_INCLUDE_DIR} )
+include_directories( ${OGRE_RTSS_INCLUDE_DIR} )
 
 if(UNIX)
 	FIND_PACKAGE(GTK2 COMPONENTS gtk)
@@ -73,6 +75,7 @@ set (HEADER_FILES
 	include/Core/MovableText.h
 	include/Core/Panels/AnimPosePanel.h
 	include/Core/Panels/LightsPanel.h
+	include/Core/ShaderGeneratorTechniqueResolverListener.h
 	include/Core/wxOgreMeshViewerMainFrame.h
 	include/Core/wxOgreMeshViewerMainFrameImpl.h
 	include/Core/wxOgreRenderWindow.h
@@ -86,6 +89,7 @@ set (SOURCE_FILES
 	src/Core/MovableText.cpp
 	src/Core/Panels/AnimPosePanel.cpp
 	src/Core/Panels/LightsPanel.cpp
+	src/Core/ShaderGeneratorTechniqueResolverListener.cpp
 	src/Core/wxOgreMeshViewerMainFrame.cpp
 	src/Core/wxOgreMeshViewerMainFrameImpl.cpp
 	src/Core/wxOgreRenderWindow.cpp
@@ -102,7 +106,8 @@ ADD_EXECUTABLE(OgreMeshy WIN32 ${HEADER_FILES} ${SOURCE_FILES} )
 TARGET_LINK_LIBRARIES( OgreMeshy ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES( OgreMeshy ${OGRE_LIBRARIES} )
 set(OGRE_Overlay_LIBRARIES OgreOverlay)
-TARGET_LINK_LIBRARIES( OgreMeshy ${OGRE_Overlay_LIBRARIES} )
+set(OGRE_RTSS_LIBRARIES OgreRTShaderSystem)
+TARGET_LINK_LIBRARIES( OgreMeshy ${OGRE_Overlay_LIBRARIES} ${OGRE_RTSS_LIBRARIES} )
 
 if(UNIX)
 	TARGET_LINK_LIBRARIES( OgreMeshy ${GTK2_LIBRARIES} )
