@@ -183,7 +183,25 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 																	c_InterMeshPermGroup );
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/Fonts", "FileSystem",
 																	c_InterMeshPermGroup );
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib",
+																	"FileSystem", c_InterMeshPermGroup );
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/glsl",
+																	"FileSystem", c_InterMeshPermGroup );
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/glsles",
+																	"FileSystem", c_InterMeshPermGroup );
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/hlsl",
+																	"FileSystem", c_InterMeshPermGroup );
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/cg",
+																	"FileSystem", c_InterMeshPermGroup );
 	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup( c_InterMeshPermGroup );
+
+	bool success = initializeRTShaderSystem(m_sceneManager);
+	if (success)
+	{
+		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->setTargetLanguage("cg");
+		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->addSceneManager(m_sceneManager);
+		mShaderGenerator->addSceneManager(m_sceneManager);
+	}
 
 	//Create this one here now to avoid an exception when we try to delete it
 	Ogre::ResourceGroupManager::getSingleton().createResourceGroup( c_InternMeshGroup );
@@ -452,24 +470,6 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 	m_wxOgreRenderWindow->SetFocus();
 
 	createSystems();
-
-
-	std::string baseUrl = "Resources/RTShaderLib";
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(baseUrl ,"FileSystem");		
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(baseUrl + "/glsl","FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(baseUrl + "/glsles","FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(baseUrl + "/hlsl","FileSystem");		
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(baseUrl + "/cg","FileSystem");	
-
-	
-	
-	bool success = initializeRTShaderSystem(m_sceneManager);
-	if (success)
-	{
-		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->setTargetLanguage("cg");
-		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->addSceneManager(m_sceneManager);
-		mShaderGenerator->addSceneManager(m_sceneManager);
-	}
 	
 	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	//m_wxAuiManager->AddPane( m_wxOgreRenderWindow, wxLEFT|wxTOP, wxT("OGRE Render Window"));
@@ -877,7 +877,8 @@ void MeshyMainFrameImpl::loadResourcesCfg( const wxString &file )
 			//Reloading the material is necessary because the material may not have been defined
 			//among the resources we're reloading, but this material may be using shaders that no
 			//long exist.
-			Ogre::MaterialPtr pMat = Ogre::MaterialManager::getSingleton().getByName( materialNames[i] ).staticCast<Ogre::Material>();
+			Ogre::MaterialPtr pMat = Ogre::MaterialManager::getSingleton().getByName( materialNames[i] ).
+																			staticCast<Ogre::Material>();
 			pMat->reload();
 			m_meshEntity->getSubEntity(i)->setMaterial( pMat );
 		}
@@ -1799,92 +1800,141 @@ void MeshyMainFrameImpl::messageLogged( const Ogre::String& message, Ogre::LogMe
 }
 
 bool MeshyMainFrameImpl::initializeRTShaderSystem(Ogre::SceneManager* sceneMgr)
-		{			
-			if (Ogre::RTShader::ShaderGenerator::initialize())
-			{
-				mShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+{			
+	if (Ogre::RTShader::ShaderGenerator::initialize())
+	{
+		mShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 
-				mShaderGenerator->addSceneManager(sceneMgr);
+		mShaderGenerator->addSceneManager(sceneMgr);
 
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_NACL && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
-				// Setup core libraries and shader cache path.
-				Ogre::StringVector groupVector = Ogre::ResourceGroupManager::getSingleton().getResourceGroups();
-				Ogre::StringVector::iterator itGroup = groupVector.begin();
-				Ogre::StringVector::iterator itGroupEnd = groupVector.end();
-				Ogre::String shaderCoreLibsPath;
-				Ogre::String shaderCachePath;
-			
-				for (; itGroup != itGroupEnd; ++itGroup)
+		// Setup core libraries and shader cache path.
+		/*Ogre::StringVector groupVector = Ogre::ResourceGroupManager::getSingleton().getResourceGroups();
+		Ogre::StringVector::iterator itGroup = groupVector.begin();
+		Ogre::StringVector::iterator itGroupEnd = groupVector.end();
+		Ogre::String shaderCoreLibsPath;
+		Ogre::String shaderCachePath;
+
+		for (; itGroup != itGroupEnd; ++itGroup)
+		{
+			Ogre::ResourceGroupManager::LocationList resLocationsList = Ogre::ResourceGroupManager::
+														getSingleton().getResourceLocationList(*itGroup);
+			Ogre::ResourceGroupManager::LocationList::iterator it = resLocationsList.begin();
+			Ogre::ResourceGroupManager::LocationList::iterator itEnd = resLocationsList.end();
+			bool coreLibsFound = false;
+
+			// Try to find the location of the core shader lib functions and use it
+			// as shader cache path as well - this will reduce the number of generated files
+			// when running from different directories.
+			for (; it != itEnd; ++it)
+			{
+				if ((*it)->archive->getName().find("RTShaderLib") != Ogre::String::npos)
 				{
-					Ogre::ResourceGroupManager::LocationList resLocationsList = Ogre::ResourceGroupManager::getSingleton().getResourceLocationList(*itGroup);
-					Ogre::ResourceGroupManager::LocationList::iterator it = resLocationsList.begin();
-					Ogre::ResourceGroupManager::LocationList::iterator itEnd = resLocationsList.end();
-					bool coreLibsFound = false;
-
-					// Try to find the location of the core shader lib functions and use it
-					// as shader cache path as well - this will reduce the number of generated files
-					// when running from different directories.
-					for (; it != itEnd; ++it)
-					{
-						if ((*it)->archive->getName().find("RTShaderLib") != Ogre::String::npos)
-						{
-							shaderCoreLibsPath = (*it)->archive->getName() + "/cache/";
-							shaderCachePath = shaderCoreLibsPath;
-							coreLibsFound = true;
-							break;
-						}
-					}
-					// Core libs path found in the current group.
-					if (coreLibsFound) 
-						break; 
-				}
-
-				// Core shader libs not found -> shader generating will fail.
-				if (shaderCoreLibsPath.empty())			
-					return false;			
-								
-#ifdef _RTSS_WRITE_SHADERS_TO_DISK
-				// Set shader cache path.
-#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-                shaderCachePath = Ogre::macCachePath();
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-                shaderCachePath = Ogre::macCachePath() + "/org.ogre3d.RTShaderCache";
-#endif
-				mShaderGenerator->setShaderCachePath(shaderCachePath);		
-#endif
-#endif
-				// Create and register the material manager listener if it doesn't exist yet.
-				if (mMaterialMgrListener == NULL) {
-					mMaterialMgrListener = new ShaderGeneratorTechniqueResolverListener(mShaderGenerator);
-					Ogre::MaterialManager::getSingleton().addListener(mMaterialMgrListener);
+					shaderCoreLibsPath = (*it)->archive->getName() + "/cache/";
+					shaderCachePath = shaderCoreLibsPath;
+					coreLibsFound = true;
+					break;
 				}
 			}
-
-				Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
-
-			return true;
+			// Core libs path found in the current group.
+			if (coreLibsFound) 
+				break; 
 		}
+
+		// Core shader libs not found -> shader generating will fail.
+		if (shaderCoreLibsPath.empty())			
+			return false;*/
+
+		Ogre::StringVector groupVector = Ogre::ResourceGroupManager::getSingleton().getResourceGroups();
+		Ogre::StringVector::iterator itGroup = groupVector.begin();
+		Ogre::StringVector::iterator enGroup = groupVector.end();
+
+		bool coreLibsFound = false;
+		while( itGroup != enGroup && !coreLibsFound )
+		{
+			Ogre::ResourceGroupManager::LocationList resLocationsList = Ogre::ResourceGroupManager::
+														getSingleton().getResourceLocationList(*itGroup);
+			Ogre::ResourceGroupManager::LocationList::iterator itor = resLocationsList.begin();
+			Ogre::ResourceGroupManager::LocationList::iterator end  = resLocationsList.end();
+
+			// Try to find the location of the core shader lib functions and use it
+			// as shader cache path as well - this will reduce the number of generated files
+			// when running from different directories.
+			while( itor != end && !coreLibsFound )
+			{
+				if( (*itor)->archive->getName().find("RTShaderLib") != Ogre::String::npos )
+					coreLibsFound = true;
+				++itor;
+			}
+
+			++itGroup;
+		}
+
+		if( !coreLibsFound )
+		{
+			Ogre::RTShader::ShaderGenerator::finalize();
+			return false;
+		}
+
+		Ogre::String shaderCachePath = m_configDirectory + "RTShaderCache/";
+		wxString shaderCachePathWx( shaderCachePath.c_str(), wxConvUTF8 );
+		if( !wxDirExists( shaderCachePathWx ) )
+		{
+			//If wxMkdir fails, setShaderCachePath will throw, no need
+			//to check here (the throw will also put a log warning)
+			wxMkdir( shaderCachePathWx );
+		}
+
+#ifdef _RTSS_WRITE_SHADERS_TO_DISK
+		// Set shader cache path.
+#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
+        shaderCachePath = Ogre::macCachePath();
+#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+        shaderCachePath = Ogre::macCachePath() + "/org.ogre3d.RTShaderCache";
+#endif
+		try
+		{
+			mShaderGenerator->setShaderCachePath(shaderCachePath);
+		}
+		catch( Ogre::Exception &e )
+		{
+			e;
+			mShaderGenerator->setShaderCachePath("");
+		}
+#endif
+#endif
+		// Create and register the material manager listener if it doesn't exist yet.
+		if (mMaterialMgrListener == NULL) {
+			mMaterialMgrListener = new ShaderGeneratorTechniqueResolverListener(mShaderGenerator);
+			Ogre::MaterialManager::getSingleton().addListener(mMaterialMgrListener);
+		}
+	}
+
+	Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
+
+	return true;
+}
 
 /*-----------------------------------------------------------------------------
 | Finalize the RT Shader system.	
 -----------------------------------------------------------------------------*/
 void MeshyMainFrameImpl::finalizeRTShaderSystem()
-		{
-			// Restore default scheme.
-			Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+{
+	// Restore default scheme.
+	Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
 
-			// Unregister the material manager listener.
-			if (mMaterialMgrListener != NULL)
-			{			
-				Ogre::MaterialManager::getSingleton().removeListener(mMaterialMgrListener);
-				delete mMaterialMgrListener;
-				mMaterialMgrListener = NULL;
-			}
+	// Unregister the material manager listener.
+	if (mMaterialMgrListener != NULL)
+	{			
+		Ogre::MaterialManager::getSingleton().removeListener(mMaterialMgrListener);
+		delete mMaterialMgrListener;
+		mMaterialMgrListener = NULL;
+	}
 
-			// Finalize RTShader system.
-			if (mShaderGenerator != NULL)
-			{				
-				Ogre::RTShader::ShaderGenerator::finalize();
-				mShaderGenerator = NULL;
-			}
-		}
+	// Finalize RTShader system.
+	if (mShaderGenerator != NULL)
+	{				
+		Ogre::RTShader::ShaderGenerator::finalize();
+		mShaderGenerator = NULL;
+	}
+}
