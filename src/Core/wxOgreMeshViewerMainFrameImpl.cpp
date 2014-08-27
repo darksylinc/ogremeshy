@@ -1872,7 +1872,7 @@ bool MeshyMainFrameImpl::initializeRTShaderSystem(Ogre::SceneManager* sceneMgr)
 
 		if( !coreLibsFound )
 		{
-			Ogre::RTShader::ShaderGenerator::finalize();
+			Ogre::RTShader::ShaderGenerator::destroy();
 			return false;
 		}
 
@@ -1934,7 +1934,7 @@ void MeshyMainFrameImpl::finalizeRTShaderSystem()
 	// Finalize RTShader system.
 	if (mShaderGenerator != NULL)
 	{				
-		Ogre::RTShader::ShaderGenerator::finalize();
+		Ogre::RTShader::ShaderGenerator::destroy();
 		mShaderGenerator = NULL;
 	}
 }
