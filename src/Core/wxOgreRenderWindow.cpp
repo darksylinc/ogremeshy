@@ -158,10 +158,11 @@ void wxOgreRenderWindow::OnMouseEvents (wxMouseEvent &evt)
 void wxOgreRenderWindow::CreateRenderWindow ()
 {
 	Ogre::NameValuePairList params;
-#ifdef __WXMSW__
-	params["externalWindowHandle"] = GetOgreHandle ();
-#elif defined(__WXGTK__)
-	params["parentWindowHandle"] = GetOgreHandle ();
+	params["externalWindowHandle"] = GetOgreHandle();
+	params["parentWindowHandle"] = GetOgreHandle();
+#if defined(__WXOSX__)
+	params["macAPI"] = "cocoa";
+	params["macAPICocoaUseNSView"] = "true";
 #endif
 	//params["useNVPerfHUD"] = "Yes";
 

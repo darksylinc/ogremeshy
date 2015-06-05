@@ -1,9 +1,11 @@
 
 #ifndef __ShaderGeneratorTechniqueResolverListener__
 #define __ShaderGeneratorTechniqueResolverListener__
-#include "OgreStringVector.h"
-#include "OgreRTShaderSystem.h"
-#include "OgreShaderGenerator.h"
+#include <OgreStringVector.h>
+#include <OgreRTShaderSystem.h>
+#include <OgreShaderGenerator.h>
+#include <OgreTechnique.h>
+#include <OgreMaterialManager.h>
 #define _RTSS_WRITE_SHADERS_TO_DISK 0
 class ShaderGeneratorTechniqueResolverListener : public Ogre::MaterialManager::Listener
 {

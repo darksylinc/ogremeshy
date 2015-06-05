@@ -23,6 +23,7 @@
 #include <OgreEntity.h>
 #include <OgreAnimation.h>
 #include <OgreKeyFrame.h>
+#include <OgreMesh.h>
 
 //Avoid accidentally loading a mesh which matches an animation with this name. (Seriously? that name?)
 const Ogre::String c_manualPoseAnimationName = "PoseManual#!@@!_  Q";

@@ -123,13 +123,17 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 	{
 		//Need to convert to OEM codepage so that fstream can
 		//use it properly on international systems.
-		TCHAR oemPath[MAX_PATH];
-		CharToOem( path, oemPath );
-		m_configDirectory = oemPath;
+#if defined(_UNICODE) || defined(UNICODE)
+		int size_needed = WideCharToMultiByte(CP_UTF8, 0, path, (int)wcslen(path), NULL, 0, NULL, NULL);
+		m_configDirectory = std::string(size_needed, 0);
+		WideCharToMultiByte(CP_UTF8, 0, path, (int)wcslen(path), &m_configDirectory[0], size_needed, NULL, NULL);
+#else
+		m_configDirectory = std::string(path);
+#endif
 		m_configDirectory += "\\OgreMeshy\\";
 
 		//Attempt to create directory where config files go
-		if( !CreateDirectory( m_configDirectory.c_str(), NULL ) &&
+		if( !CreateDirectoryA( m_configDirectory.c_str(), NULL ) &&
 			GetLastError() != ERROR_ALREADY_EXISTS )
 		{
 			//Couldn't create directory (no write access?),
@@ -264,6 +268,8 @@ MeshyMainFrameImpl::~MeshyMainFrameImpl()
 		m_wxOgreRenderWindow->Destroy();
 		m_wxOgreRenderWindow = 0;
 	}
+
+	Ogre::LogManager::getSingleton().getDefaultLog()->removeListener(this);
 
 	if( m_root )
 	{
@@ -453,9 +459,7 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 	const std::string c_pluginsCfg = "";
 #endif
 
-	m_root = new Ogre::Root( c_pluginsCfg + "Plugins.cfg", m_configDirectory + "ogre.cfg",
-							m_configDirectory + "Ogre.log"  );
-	Ogre::LogManager::getSingleton().getDefaultLog()->addListener( this );
+	m_root = new Ogre::Root(c_pluginsCfg + "Plugins.cfg", m_configDirectory + "ogre.cfg", m_configDirectory + "Ogre.log");
 	if( bForceSetup || !m_root->restoreConfig() )
 		m_root->showConfigDialog();
 
@@ -469,6 +473,7 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 
 	m_wxOgreRenderWindow->SetFocus();
 
+	Ogre::LogManager::getSingleton().getDefaultLog()->addListener( this );
 	createSystems();
 	
 	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -637,16 +642,17 @@ void MeshyMainFrameImpl::showAboutBox()
 
 	info.SetName(_T("Ogre Meshy"));
 #ifdef __WXMSW__
-	info.SetVersion(wxT("1.5"));
+	info.SetVersion(wxT("1.6"));
 #else
-	info.SetVersion(wxT("1.5 for Linux beta"));
+	info.SetVersion(wxT("1.6 for Linux beta"));
 #endif
     info.SetDescription(_T("Simple application to view mesh properties\n") + descLinked);
-    info.SetCopyright(_T("(C) 2010-2013 Matias N. Goldberg \"dark_sylinc\""));
+    info.SetCopyright(_T("(C) 2010-2015 Matias N. Goldberg \"dark_sylinc\""));
 	info.AddDeveloper(_T("Matias N. Goldberg - dark_sylinc"));
 	info.AddDeveloper(_T("Thomas Fischer - tdev"));
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));
-	info.AddArtist( wxT("\nMatias N. Goldberg") );
+	info.AddDeveloper(_T("Transporter"));
+	info.AddArtist(wxT("\nMatias N. Goldberg"));
 	info.AddArtist( wxT("\nRogerio de Souza Santos (File.png, Reload.png & ChangeBGColour.png)") );
 	info.SetWebSite( wxT( "http://www.yosoygames.com.ar/wp/ogre-meshy/" ),
 					 wxT( ">>*  PLEASE DONATE  <<" ) );
