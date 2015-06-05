@@ -124,11 +124,13 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 		//Need to convert to OEM codepage so that fstream can
 		//use it properly on international systems.
 #if defined(_UNICODE) || defined(UNICODE)
-		int size_needed = WideCharToMultiByte(CP_UTF8, 0, path, (int)wcslen(path), NULL, 0, NULL, NULL);
+		int size_needed = WideCharToMultiByte(CP_OEMCP, 0, path, (int)wcslen(path), NULL, 0, NULL, NULL);
 		m_configDirectory = std::string(size_needed, 0);
-		WideCharToMultiByte(CP_UTF8, 0, path, (int)wcslen(path), &m_configDirectory[0], size_needed, NULL, NULL);
+		WideCharToMultiByte(CP_OEMCP, 0, path, (int)wcslen(path), &m_configDirectory[0], size_needed, NULL, NULL);
 #else
-		m_configDirectory = std::string(path);
+		TCHAR oemPath[MAX_PATH];
+		CharToOem( path, oemPath );
+		m_configDirectory = std::string( oemPath );
 #endif
 		m_configDirectory += "\\OgreMeshy\\";
 
