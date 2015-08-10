@@ -1,3 +1,9 @@
+[1.6]
+Maintenance release.
+Ported to wxWidgets 3.0
+Improved stability in Ubuntu Linux.
+RTSS is now off by default as it was causing some crashes. The setting is saved to file for those who want it on.
+
 [1.5]
 Fixed weird docking windows behavior when floating.
 Fixed crash when opening a mesh that didn't contain index data.
