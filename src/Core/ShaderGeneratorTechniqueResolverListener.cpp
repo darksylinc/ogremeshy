@@ -1,5 +1,5 @@
+#ifdef MESHY_USE_RTSS
 #include "Core/ShaderGeneratorTechniqueResolverListener.h"
-
 	ShaderGeneratorTechniqueResolverListener::ShaderGeneratorTechniqueResolverListener(Ogre::RTShader::ShaderGenerator* pShaderGenerator)
 	{
 		mShaderGenerator = pShaderGenerator;			
@@ -51,3 +51,4 @@
 
 		return generatedTech;
 	}
+#endif

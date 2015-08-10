@@ -34,7 +34,9 @@
 #include "Core/GridSettingsImpl.h"
 
 #include "OgreResourceGroupManager.h"
-#include "OgreShaderGenerator.h"
+#ifdef MESHY_USE_RTSS
+    #include "OgreShaderGenerator.h"
+#endif
 #include "OgreException.h"
 
 #include "iostream"
@@ -89,7 +91,7 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 {
 #ifndef __WXMSW__
 	//Set config directory to user home directory
-	m_configDirectory = std::string(wxGetHomeDir().mb_str()) + "/.ogremeshy/";
+    m_configDirectory = std::string(wxGetHomeDir().mb_str()) + "/.ogremeshy/";
 	{
 		wxString configDir( m_configDirectory.c_str(), wxConvUTF8 );
 		if( !wxDirExists( configDir ) )
@@ -145,7 +147,11 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 	}
 #endif
 
-	SetIcon( wxIcon(wxT("OgreIcon")) ); //This probably only works in Windows
+#ifdef __WXMSW__
+    SetIcon( wxIcon(wxT("OgreIcon")) ); //This probably only works in Windows
+#else
+    SetIcon( wxIcon(wxT("Resources/OgreIcon.ico")) ); //This probably only works in Windows
+#endif
 
 	//wxFormBuilder doesn't allow default disabled for toolbars
 	m_toolBar->EnableTool( wxID_MENUSHOWBONES, false );
@@ -189,25 +195,30 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 																	c_InterMeshPermGroup );
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/Fonts", "FileSystem",
 																	c_InterMeshPermGroup );
+
+#ifdef MESHY_USE_RTSS
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib",
 																	"FileSystem", c_InterMeshPermGroup );
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/glsl",
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/GLSL",
 																	"FileSystem", c_InterMeshPermGroup );
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/glsles",
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/GLSLES",
 																	"FileSystem", c_InterMeshPermGroup );
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/hlsl",
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/HLSL",
 																	"FileSystem", c_InterMeshPermGroup );
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/cg",
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/Cg",
 																	"FileSystem", c_InterMeshPermGroup );
+#endif
 	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup( c_InterMeshPermGroup );
 
+#ifdef MESHY_USE_RTSS
 	bool success = initializeRTShaderSystem(m_sceneManager);
 	if (success)
 	{
 		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->setTargetLanguage("cg");
 		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->addSceneManager(m_sceneManager);
-		mShaderGenerator->addSceneManager(m_sceneManager);
+        m_shaderGenerator->addSceneManager(m_sceneManager);
 	}
+#endif
 
 	//Create this one here now to avoid an exception when we try to delete it
 	Ogre::ResourceGroupManager::getSingleton().createResourceGroup( c_InternMeshGroup );
@@ -327,7 +338,7 @@ void MeshyMainFrameImpl::saveSettings()
 		if( myFile.is_open() )
 		{
 			const wxString layoutString = m_wxAuiManager->SavePerspective();
-			myFile.write( layoutString.mb_str(), layoutString.size() );
+            myFile.write( layoutString.mb_str(), layoutString.size() );
 			myFile.close();
 		}
 	}
@@ -456,7 +467,8 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 {
 #ifndef __WXMSW__
 	//Set config directory
-	const std::string c_pluginsCfg = "/opt/ogremeshy/";
+    //const std::string c_pluginsCfg = "/opt/ogremeshy/";
+    const std::string c_pluginsCfg = "";
 #else
 	const std::string c_pluginsCfg = "";
 #endif
@@ -674,7 +686,7 @@ void MeshyMainFrameImpl::openMeshDialog()
 								wxT(""), wxT("*.mesh"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition);
  
 	if( openFileDialog.ShowModal() == wxID_OK )
-		openMesh( std::string( openFileDialog.GetPath().mb_str() ) );
+        openMesh( std::string( openFileDialog.GetPath().mb_str() ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -732,16 +744,18 @@ void MeshyMainFrameImpl::openMesh( const std::string &directory, const std::stri
 	Ogre::ResourceGroupManager::getSingleton().createResourceGroup( c_InternMeshGroup );
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( directory, "FileSystem",
 																	c_InternMeshGroup );
-	try
+    try
 	{
-		mShaderGenerator->removeAllShaderBasedTechniques();
+#ifdef MESHY_USE_RTSS
+        m_shaderGenerator->removeAllShaderBasedTechniques();
+#endif
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	}
 	catch(...)
 	{
 		//Some material or may be even an unrelated scripts crashed the engine.
 		//Load the model plain simple, no materials. Only skeleton and mesh.
-	}
+    }
 
 	m_meshEntity	= m_sceneManager->createEntity( "MeshEntity", meshName, c_InternMeshGroup );
 	m_meshSceneNode	= m_sceneManager->getRootSceneNode()->createChildSceneNode();
@@ -830,10 +844,10 @@ void MeshyMainFrameImpl::loadResourcesCfg( const wxString &file )
 
 	unloadResourcesCfg();
 
-	m_resourcesCfgFile = file.mb_str();
+    m_resourcesCfgFile = file.mb_str();
 
 	const wxFileName fileName( file );
-	const std::string relativePath( (fileName.GetPath() + wxT("/")).mb_str() );
+    const std::string relativePath( (fileName.GetPath() + wxT("/")).mb_str() );
 
 	Ogre::ConfigFile cf;
 	cf.load( m_resourcesCfgFile );
@@ -1464,7 +1478,7 @@ void MeshyMainFrameImpl::takeSnapshot( bool askLocation )
 		try
 		{
 			m_wxOgreRenderWindow->GetRenderWindow()->writeContentsToFile( Ogre::String(
-																			fullPath.mb_str() ) );
+                                                                            fullPath.mb_str() ) );
 			m_statusBar1->SetStatusText( wxT( "Screenshot: " + fullPath ), 0 );
 		}
 		catch( Ogre::Exception &e )
@@ -1523,8 +1537,8 @@ bool MeshyMainFrameImpl::frameStarted( const Ogre::FrameEvent& evt )
 													getStatistics();
 
 	m_statusBar1->SetStatusText( wxString::Format( wxT("%0.2f FPS"), stats.avgFPS ),		1 );
-	m_statusBar1->SetStatusText( wxString::Format( wxT("polys: %d"), stats.triangleCount ),	2 );
-	m_statusBar1->SetStatusText( wxString::Format( wxT("batches: %d"), stats.batchCount ),	3 );
+    m_statusBar1->SetStatusText( wxString::Format( wxT("polys: %u"), (Ogre::uint32)stats.triangleCount ),	2 );
+    m_statusBar1->SetStatusText( wxString::Format( wxT("batches: %u"), (Ogre::uint32)stats.batchCount ),	3 );
 
 	if(m_meshEntity)
 	{
@@ -1536,9 +1550,10 @@ bool MeshyMainFrameImpl::frameStarted( const Ogre::FrameEvent& evt )
 	return true;
 }
 
-void MeshyMainFrameImpl::SetRTSS( bool enabled)
+void MeshyMainFrameImpl::SetRTSS( bool enabled )
 {
-	m_menuView->Check(wxID_MENUUSERTSS,enabled) ;
+#ifdef MESHY_USE_RTSS
+    m_menuView->Check(wxID_MENUUSERTSS,enabled) ;
 	
 	Ogre::Viewport *vp =  m_camera->getViewport();
 	if( vp )
@@ -1547,7 +1562,14 @@ void MeshyMainFrameImpl::SetRTSS( bool enabled)
 			vp->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 		else
 			vp->setMaterialScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
-	}
+    }
+#else
+    if( m_menuView->IsEnabled( wxID_MENUUSERTSS ) )
+    {
+        m_menuView->SetLabel( wxID_MENUUSERTSS, wxT("RTSS - Not Compiled") );
+        m_menuView->Enable( wxID_MENUUSERTSS, false );
+    }
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1807,13 +1829,14 @@ void MeshyMainFrameImpl::messageLogged( const Ogre::String& message, Ogre::LogMe
 	}
 }
 
+#ifdef MESHY_USE_RTSS
 bool MeshyMainFrameImpl::initializeRTShaderSystem(Ogre::SceneManager* sceneMgr)
-{			
+{
 	if (Ogre::RTShader::ShaderGenerator::initialize())
 	{
-		mShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+        m_shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 
-		mShaderGenerator->addSceneManager(sceneMgr);
+        m_shaderGenerator->addSceneManager(sceneMgr);
 
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_NACL && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
 		// Setup core libraries and shader cache path.
@@ -1902,18 +1925,18 @@ bool MeshyMainFrameImpl::initializeRTShaderSystem(Ogre::SceneManager* sceneMgr)
 #endif
 		try
 		{
-			mShaderGenerator->setShaderCachePath(shaderCachePath);
+            m_shaderGenerator->setShaderCachePath(shaderCachePath);
 		}
 		catch( Ogre::Exception &e )
 		{
 			e;
-			mShaderGenerator->setShaderCachePath("");
+            m_shaderGenerator->setShaderCachePath("");
 		}
 #endif
 #endif
 		// Create and register the material manager listener if it doesn't exist yet.
 		if (mMaterialMgrListener == NULL) {
-			mMaterialMgrListener = new ShaderGeneratorTechniqueResolverListener(mShaderGenerator);
+            mMaterialMgrListener = new ShaderGeneratorTechniqueResolverListener(m_shaderGenerator);
 			Ogre::MaterialManager::getSingleton().addListener(mMaterialMgrListener);
 		}
 	}
@@ -1940,9 +1963,10 @@ void MeshyMainFrameImpl::finalizeRTShaderSystem()
 	}
 
 	// Finalize RTShader system.
-	if (mShaderGenerator != NULL)
+    if (m_shaderGenerator != NULL)
 	{				
 		Ogre::RTShader::ShaderGenerator::destroy();
-		mShaderGenerator = NULL;
+        m_shaderGenerator = NULL;
 	}
 }
+#endif

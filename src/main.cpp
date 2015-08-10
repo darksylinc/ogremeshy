@@ -74,21 +74,21 @@ CmdSettings wxWidgetsApp::parseCmdLine() const
     cmdLineDesc[0].kind			= wxCMD_LINE_PARAM;
     cmdLineDesc[0].shortName	= NULL;
     cmdLineDesc[0].longName		= NULL;
-    cmdLineDesc[0].description	= wxT("Input mesh file");
+    cmdLineDesc[0].description	= "Input mesh file";
     cmdLineDesc[0].type			= wxCMD_LINE_VAL_STRING;
     cmdLineDesc[0].flags		= wxCMD_LINE_PARAM_OPTIONAL;
 
 	cmdLineDesc[1].kind			= wxCMD_LINE_SWITCH;
-    cmdLineDesc[1].shortName	= wxT("setup");
+    cmdLineDesc[1].shortName	= "setup";
     cmdLineDesc[1].longName		= NULL;
-    cmdLineDesc[1].description	= wxT("Configure OGRE's RenderSystem (D3D & OGL)");
+    cmdLineDesc[1].description	= "Configure OGRE's RenderSystem (D3D & OGL)";
     cmdLineDesc[1].type			= wxCMD_LINE_VAL_STRING;
     cmdLineDesc[1].flags		= wxCMD_LINE_PARAM_OPTIONAL;
 
 	cmdLineDesc[2].kind			= wxCMD_LINE_OPTION;
-    cmdLineDesc[2].shortName	= wxT("r");
-    cmdLineDesc[2].longName		= wxT("resources");
-    cmdLineDesc[2].description	= wxT("Specify resources.cfg to load on startup");
+    cmdLineDesc[2].shortName	= "r";
+    cmdLineDesc[2].longName		= "resources";
+    cmdLineDesc[2].description	= "Specify resources.cfg to load on startup";
     cmdLineDesc[2].type			= wxCMD_LINE_VAL_STRING;
     cmdLineDesc[2].flags		= wxCMD_LINE_PARAM_OPTIONAL;
 

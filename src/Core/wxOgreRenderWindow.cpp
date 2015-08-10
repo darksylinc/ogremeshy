@@ -5,7 +5,6 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#include <wx/gtk/win_gtk.h>
 #include <GL/glx.h>
 #endif
 
@@ -26,8 +25,8 @@ unsigned int wxOgreRenderWindow::msNextRenderWindowId = 1;
 wxOgreRenderWindow::wxOgreRenderWindow (wxWindow *parent, wxWindowID id,
 										const wxPoint &pos, const wxSize &size, long style, const wxValidator &validator)
 {
-											Init ();
-											Create (parent, id, pos, size, style, validator);
+    Init ();
+    Create (parent, id, pos, size, style, validator);
 }
 //------------------------------------------------------------------------------
 wxOgreRenderWindow::wxOgreRenderWindow ()
@@ -91,15 +90,13 @@ Ogre::RenderWindow *wxOgreRenderWindow::GetRenderWindow () const
 	return mRenderWindow;
 }
 //------------------------------------------------------------------------------
-void wxOgreRenderWindow::Update ()
+void wxOgreRenderWindow::Update()
 {
-	if (msOgreRoot)
+    //Update will be triggered when creating the Render Window. Do not
+    //try to render in such case otherwise bad things can happen.
+    if( msOgreRoot && mRenderWindow )
 	{
-		msOgreRoot->renderOneFrame ();
-
-		//Without this in Linux you'll get a black window, don't know why
-		if( mRenderWindow )
-			mRenderWindow->update();
+        msOgreRoot->renderOneFrame();
 	}
 }
 //------------------------------------------------------------------------------
@@ -110,23 +107,23 @@ void wxOgreRenderWindow::setRenderWindowListener(wxOgreRenderWindowListener *lis
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::OnPaint (wxPaintEvent &evt)
 {
-	Update ();
+    Update ();
 }
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::OnInternalIdle()
 {
 	wxControl::OnInternalIdle();
-	if( wxUpdateUIEvent::CanUpdate(this) && IsShown() )
+    if( wxUpdateUIEvent::CanUpdate(this) && IsShown() )
 	{
 		Refresh();
 		Update();
-	}
+    }
 }
 //------------------------------------------------------------------------------
 void wxOgreRenderWindow::OnSize (wxSizeEvent &evt)
 {
 	if (mRenderWindow)
-{
+    {
 		// Setting new size;
 		int width;
 		int height;
@@ -134,16 +131,18 @@ void wxOgreRenderWindow::OnSize (wxSizeEvent &evt)
 		width = size.GetWidth ();
 		height = size.GetHeight ();
 
-		mRenderWindow->resize (width, height);
+        mRenderWindow->resize(width, height);
 		// Letting Ogre know the window has been resized;
-		mRenderWindow->windowMovedOrResized ();
+        mRenderWindow->windowMovedOrResized();
 
-		Ogre::Viewport *vp = mRenderWindow->getViewport(0);
-		if( vp )
-		{
-			vp->getCamera()->setAspectRatio( Ogre::Real( vp->getActualWidth() ) /
-												Ogre::Real( vp->getActualHeight() ) );
-		}
+#if OGRE_VERSION_MAJOR < 2
+        Ogre::Viewport *vp = mRenderWindow->getViewport(0);
+        if( vp )
+        {
+            vp->getCamera()->setAspectRatio( Ogre::Real( vp->getActualWidth() ) /
+                                                Ogre::Real( vp->getActualHeight() ) );
+        }
+#endif
 	}
 
 	Update ();
@@ -158,8 +157,8 @@ void wxOgreRenderWindow::OnMouseEvents (wxMouseEvent &evt)
 void wxOgreRenderWindow::CreateRenderWindow ()
 {
 	Ogre::NameValuePairList params;
-	params["externalWindowHandle"] = GetOgreHandle();
-	params["parentWindowHandle"] = GetOgreHandle();
+    params["externalWindowHandle"]  = GetOgreHandle();
+    params["parentWindowHandle"]    = GetOgreHandle();
 #if defined(__WXOSX__)
 	params["macAPI"] = "cocoa";
 	params["macAPICocoaUseNSView"] = "true";
@@ -167,21 +166,22 @@ void wxOgreRenderWindow::CreateRenderWindow ()
 	//params["useNVPerfHUD"] = "Yes";
 
 	//Enforce vsync to avoid hogging the CPU unnecessarily
-	params["vsync"] = "true"; 
+    params["vsync"] = "true";
+#if OGRE_VERSION_MAJOR >= 2
+    params["gamma"] = "true";
+#endif
 
 	// Get wx control window size
 	int width;
 	int height;
 	GetSize (&width, &height);
 	// Create the render window
-	mRenderWindow = Ogre::Root::getSingleton ().createRenderWindow (
+    mRenderWindow = msOgreRoot->createRenderWindow(
 		Ogre::String ("OgreRenderWindow") + Ogre::StringConverter::toString (msNextRenderWindowId++),
-		width, height, false, &params);
+        width, height, false, &params );
 
-	//We update manually because in Linux it's broken
-	mRenderWindow->setAutoUpdated( false );
-
-	mRenderWindow->setActive (true);
+    mRenderWindow->setActive( true );
+    mRenderWindow->setVisible( true );
 }
 //------------------------------------------------------------------------------
 Ogre::String wxOgreRenderWindow::GetOgreHandle () const
@@ -194,39 +194,13 @@ Ogre::String wxOgreRenderWindow::GetOgreHandle () const
 #elif defined(__WXGTK__)
 	// Handle for GTK-based systems
 
-	GtkWidget *widget = m_wxwindow;
-	gtk_widget_set_double_buffered (widget, FALSE);
+    GtkWidget *widget = GetHandle();
+    gtk_widget_set_double_buffered( widget, FALSE );
 	gtk_widget_realize( widget );
 
-	// Grab the window object
-	GdkWindow *gdkWin = GTK_PIZZA (widget)->bin_window;
-	Display* display = GDK_WINDOW_XDISPLAY(gdkWin);
-	Window wid = GDK_WINDOW_XWINDOW(gdkWin);
-
-	XSync( display, false );		//Added by Dark Sylinc
-	XMapWindow( display, wid );		//Added by Dark Sylinc 
+    Window wid = gdk_x11_drawable_get_xid(gtk_widget_get_window(widget));
 
 	std::stringstream str;
-
-	// Display
-	/*Deprecated externalWindowHandle
-	str << (unsigned long)display << ':';
-
-	// Screen (returns "display.screen")
-	std::string screenStr = DisplayString(display);
-	std::string::size_type dotPos = screenStr.find(".");
-	screenStr = screenStr.substr(dotPos+1, screenStr.size());
-	str << screenStr << ':';
-
-	// XID
-	str << wid << ':';
-
-	// Retrieve XVisualInfo
-	int attrlist[] = { GLX_RGBA, GLX_DOUBLEBUFFER, GLX_DEPTH_SIZE, 16, GLX_STENCIL_SIZE, 8, None };
-	XVisualInfo* vi = glXChooseVisual(display, DefaultScreen(display), attrlist);
-	str << (unsigned long)vi;*/
-
-	//parentWindowHandle just uses the XID
 	str << wid;
 
 	handle = str.str();
