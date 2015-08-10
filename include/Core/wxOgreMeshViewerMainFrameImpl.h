@@ -100,10 +100,12 @@ class MeshyMainFrameImpl : public MainFrame, public wxOgreRenderWindowListener,
 	int					m_mouseY; //event's data and calculate delta ourselves
 	CoordinateConvention m_coordinateConvention;
 
+#ifdef MESHY_USE_RTSS
 	// The shader generator instance.		
-	Ogre::RTShader::ShaderGenerator*	mShaderGenerator;
+    Ogre::RTShader::ShaderGenerator*	m_shaderGenerator;
 	// Shader generator material manager listener.	
-	ShaderGeneratorTechniqueResolverListener*	mMaterialMgrListener;		
+    ShaderGeneratorTechniqueResolverListener*	mMaterialMgrListener;
+#endif
 
 	void saveSettings();
 	void loadSettings();
@@ -145,8 +147,12 @@ class MeshyMainFrameImpl : public MainFrame, public wxOgreRenderWindowListener,
 	wxString formatBytes( unsigned long bytes ) const;
 
 	void takeSnapshot( bool askLocation );
-	virtual void finalizeRTShaderSystem();
-	virtual bool initializeRTShaderSystem(Ogre::SceneManager* sceneMgr);
+
+#ifdef MESHY_USE_RTSS
+    void finalizeRTShaderSystem();
+    bool initializeRTShaderSystem( Ogre::SceneManager* sceneMgr );
+#endif
+
 public:
 	/** Constructor */
 	MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmdSettings );

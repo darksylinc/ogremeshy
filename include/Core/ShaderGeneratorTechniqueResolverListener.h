@@ -1,6 +1,8 @@
 
 #ifndef __ShaderGeneratorTechniqueResolverListener__
 #define __ShaderGeneratorTechniqueResolverListener__
+
+#ifdef MESHY_USE_RTSS
 #include <OgreStringVector.h>
 #include <OgreRTShaderSystem.h>
 #include <OgreShaderGenerator.h>
@@ -19,5 +21,6 @@ public:
 	protected:	
 	Ogre::RTShader::ShaderGenerator*	mShaderGenerator;			// The shader generator instance.		
 };
+#endif
 
 #endif

@@ -28,6 +28,8 @@ You'll need wxWidgets 2.8 or higher
 You'll need dev OGRE installed in your system
 You'll need OpenGL dev libraries (they usually come with Mesa or X11)
 
+sudo apt-get install libwxgtk2.8-dev libwxgtk2.8-dbg libgtk2.0-dev
+
 Note: If you're using Ogre 1.8 or lower instead of 1.9; overwrite rename 'CMakeLists.old.1.8.txt' as 'CMakeLists.txt'
 
 Copy all necessary Resources files to folder bin/Release_Linux/Resources; the following script will do that for you:
@@ -45,7 +47,7 @@ Copy the following plugins to bin/Release_Linux/Plugins:
 	Plugin_OctreeSceneManager.so
 	RenderSystem_GL.so
 	Note they're usually located either in /usr/local/lib/OGRE or /usr/lib/OGRE
-Now run "make install" from folder /bin/Release_Linux
+Now run "make install" from folder /bin/Release_Linux (On Ubuntu, run "make ubuntu_install" instead)
 Type ogremeshy in any terminal and enjoy running the program!
 To remove it, type "make uninstall" from folder /bin/Release_Linux
 That's it!

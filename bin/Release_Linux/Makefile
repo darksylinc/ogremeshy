@@ -8,7 +8,7 @@ rootinstall:
 	
 	cp OgreMeshy /opt/ogremeshy
 	cp Plugins.cfg /opt/ogremeshy
-	cp *.so* /opt/ogremeshy
+	#cp *.so* /opt/ogremeshy
 	cp -r Resources/* /opt/ogremeshy/Resources
 	cp -r Plugins/* /opt/ogremeshy/Plugins
 
