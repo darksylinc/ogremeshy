@@ -17,15 +17,19 @@ if( WIN32 )
 	set( wxWidgets_LIBRARIES
 		debug wxbase30ud
 		debug wxmsw30ud_core
+		debug wxmsw30ud_adv
 		debug wxmsw30ud_aui
 		debug wxpngd
 		debug wxzlibd
 
 		optimized wxbase30u
 		optimized wxmsw30u_core
+		optimized wxmsw30u_adv
 		optimized wxmsw30u_aui
 		optimized wxpng
 		optimized wxzlib
+
+		comctl32 Rpcrt4
 		)
 else()
 	find_package( wxWidgets COMPONENTS core base aui adv REQUIRED )

@@ -147,7 +147,7 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 	}
 #endif
 
-#if __WXMSW__
+#ifdef __WXMSW__
     SetIcon( wxIcon(wxT("OgreIcon")) ); //This probably only works in Windows
 #else
     SetIcon( wxIcon(wxT("Resources/OgreIcon.ico")) ); //This probably only works in Windows
