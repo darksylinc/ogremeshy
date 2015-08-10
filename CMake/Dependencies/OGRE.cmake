@@ -72,6 +72,13 @@ macro( setupPluginFileFromTemplate BUILD_TYPE )
 			endif()
 		endif()
 	endif()
+	
+	unset( OGRE_PLUGIN_RS_D3D9 )
+	unset( OGRE_PLUGIN_RS_D3D11 )
+	unset( OGRE_PLUGIN_RS_GL )
+	unset( OGRE_PLUGIN_RS_GL3PLUS )
+	unset( OGRE_PLUGIN_CG )
+	unset( OGRE_PLUGIN_PARTICLEFX )
 endmacro()
 
 macro( setupOgre OGRE_SOURCE, OGRE_BINARIES, OGRE_LIBRARIES )
