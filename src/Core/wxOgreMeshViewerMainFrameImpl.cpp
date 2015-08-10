@@ -91,7 +91,7 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 {
 #ifndef __WXMSW__
 	//Set config directory to user home directory
-	m_configDirectory = std::string(wxGetHomeDir().mb_str()) + "/.ogremeshy/";
+    m_configDirectory = std::string(wxGetHomeDir().mb_str()) + "/.ogremeshy/";
 	{
 		wxString configDir( m_configDirectory.c_str(), wxConvUTF8 );
 		if( !wxDirExists( configDir ) )
@@ -338,7 +338,7 @@ void MeshyMainFrameImpl::saveSettings()
 		if( myFile.is_open() )
 		{
 			const wxString layoutString = m_wxAuiManager->SavePerspective();
-			myFile.write( layoutString.mb_str(), layoutString.size() );
+            myFile.write( layoutString.mb_str(), layoutString.size() );
 			myFile.close();
 		}
 	}
@@ -686,7 +686,7 @@ void MeshyMainFrameImpl::openMeshDialog()
 								wxT(""), wxT("*.mesh"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition);
  
 	if( openFileDialog.ShowModal() == wxID_OK )
-		openMesh( std::string( openFileDialog.GetPath().mb_str() ) );
+        openMesh( std::string( openFileDialog.GetPath().mb_str() ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -844,10 +844,10 @@ void MeshyMainFrameImpl::loadResourcesCfg( const wxString &file )
 
 	unloadResourcesCfg();
 
-	m_resourcesCfgFile = file.mb_str();
+    m_resourcesCfgFile = file.mb_str();
 
 	const wxFileName fileName( file );
-	const std::string relativePath( (fileName.GetPath() + wxT("/")).mb_str() );
+    const std::string relativePath( (fileName.GetPath() + wxT("/")).mb_str() );
 
 	Ogre::ConfigFile cf;
 	cf.load( m_resourcesCfgFile );
@@ -1478,7 +1478,7 @@ void MeshyMainFrameImpl::takeSnapshot( bool askLocation )
 		try
 		{
 			m_wxOgreRenderWindow->GetRenderWindow()->writeContentsToFile( Ogre::String(
-																			fullPath.mb_str() ) );
+                                                                            fullPath.mb_str() ) );
 			m_statusBar1->SetStatusText( wxT( "Screenshot: " + fullPath ), 0 );
 		}
 		catch( Ogre::Exception &e )
@@ -1562,6 +1562,12 @@ void MeshyMainFrameImpl::SetRTSS( bool enabled )
 			vp->setMaterialScheme(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 		else
 			vp->setMaterialScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+    }
+#else
+    if( m_menuView->IsEnabled( wxID_MENUUSERTSS ) )
+    {
+        m_menuView->SetLabel( wxID_MENUUSERTSS, wxT("RTSS - Not Compiled") );
+        m_menuView->Enable( wxID_MENUUSERTSS, false );
     }
 #endif
 }

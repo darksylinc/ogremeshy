@@ -23,18 +23,22 @@ else()
 	link_directories( "${OGRE_BINARIES}/lib" )
 endif()
 
+if( WIN32 )
+	option( USE_RTSS "Compile with RTSS material generator (requires Cg plugin). Disable it if you're having issues or crashes." ON )
+else()
+	option( USE_RTSS "Compile with RTSS material generator (requires Cg plugin). Disable it if you're having issues or crashes." OFF )
+endif()
+
 include_directories( "${OGRE_SOURCE}/OgreMain/include" )
 include_directories( "${OGRE_BINARIES}/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Common/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Unlit/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Pbs/include" )
 include_directories( "${OGRE_SOURCE}/Components/Overlay/include" )
-include_directories( "${OGRE_SOURCE}/Components/RTShaderSystem/include" )
 
 set( OGRE_LIBRARIES
 	debug OgreMain_d
 	debug OgreOverlay_d
-	debug OgreRTShaderSystem_d
 	#debug OgreHlmsUnlit_d
 	#debug OgreHlmsPbs_d
 
@@ -44,7 +48,14 @@ set( OGRE_LIBRARIES
 	#optimized OgreHlmsPbs
 	)
 
-add_definitions( -DMESHY_USE_RTSS )
+if( USE_RTSS )
+	include_directories( "${OGRE_SOURCE}/Components/RTShaderSystem/include" )
+	set( OGRE_LIBRARIES ${OGRE_LIBRARIES}
+		debug OgreRTShaderSystem_d
+		optimized OgreRTShaderSystem
+		)
+	add_definitions( -DMESHY_USE_RTSS )
+endif()
 
 # Setup wxWidgets
 if( WIN32 )
