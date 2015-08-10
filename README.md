@@ -54,7 +54,7 @@ instead of:
 
 
 **Note:**
-For some reason, wxFormBuilder generates 3 weird characters at the beginning of it's generated files. If you're using GCC and get:
+For some reason, older versions of wxFormBuilder produces the unicode BOM header at the beginning of it's generated files. If you're using GCC and get:
 
 error: stray ‘\357’ in program
 
