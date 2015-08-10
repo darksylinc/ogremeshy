@@ -23,6 +23,9 @@ Works on Windows and Linux. For prebuilt binaries, go check the [SourceForge pro
 Build the CMake folder into the folder "build". Then compile it (make in Linux, open the generated sln file in Visual Studio, etc)
 The CMake script will automatically copy the Resource files from scripts/Resources into bin/Release/Resources; and the DLLs in Windows the the bin folder, including Plugins. It will also autogenerate the Plugins.cfg file.
 
+**IMPORTANT: Linux Users**
+OgreMeshy needs to have RW access to the folder "/home/username/.ogremeshy"
+
 ## Useful CMake options ##
 * Windows only: wxWidgets_SOURCE. Path to wxWidgets 3.0.0 source code, if it's somewhere else rather than Dependencies/wxWidgets_3_0
 * OGRE_SOURCE. Path to Ogre; if it's somewhere else other than Dependencies/Ogre

@@ -1,6 +1,0 @@
-Go to the folder where all the executables are placed.
-
-Type "make install" (it may ask you for root password) and you're done. Ubuntu users: type "make ubuntu_install" instead.
-Type "make uninstall" for the opposite effect. Ubuntu users: type "make ubuntu_uninstall" instead.
-
-For more information see Readme.txt

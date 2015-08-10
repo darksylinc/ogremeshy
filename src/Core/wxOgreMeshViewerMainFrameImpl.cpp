@@ -266,7 +266,7 @@ wxT("Thank you :)"));
 
 	createGrid();
 	showGrid();
-	SetRTSS(true);
+	SetRTSS( m_menuView->IsChecked( wxID_MENUUSERTSS ) );
 
 	//Apply settings
 	setCoordinateConvention( m_coordinateConvention );
@@ -321,6 +321,7 @@ void MeshyMainFrameImpl::saveSettings()
 			myFile << "BoneNameColour = "	<< std::hex <<
 								m_animationPanel->getBoneNameColour().getAsABGR() << "\n";
 			myFile << "CoordConvention = "	<< std::dec << m_coordinateConvention << "\n";
+			myFile << "UseRTSS = "	<< std::dec << m_menuView->IsChecked( wxID_MENUUSERTSS ) << "\n";
 			myFile << "RunCount = "			<< m_numRuns			<< "\n";
 			myFile << "Version = "			<< OGRE_MESHY_VERSION_NUMBER<< "\n";
 
@@ -404,6 +405,14 @@ void MeshyMainFrameImpl::loadSettings()
 						if( value >= COORD_X_UP && value < NumCoordinateConvention )
 							m_coordinateConvention = static_cast<CoordinateConvention>( value );
 					}
+
+#ifdef MESHY_USE_RTSS
+					else if( i->first == "UseRTSS" )
+					{
+						bool useRtss = Ogre::StringConverter::parseBool( i->second );
+						m_menuView->Check( wxID_MENUUSERTSS, useRtss );
+					}
+#endif
 
 					else if( i->first == "RunCount" )
 					{

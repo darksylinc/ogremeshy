@@ -1,7 +1,7 @@
-﻿OGRE MESHY  v1.5
+﻿OGRE MESHY  v1.6
 =================
 
-Copyright (C) 2010-2013 Matías Goldberg ("dark_sylinc)
+Copyright (C) 2010-2015 Matías Goldberg ("dark_sylinc)
 Under GPLv3 license
 
 File.png, Reload.png & ChangeBGColour.png are icons from H2O KDE package, made by Rogerio de Souza Santos, http://opendesktop.org/content/show.php?content=127149
@@ -32,7 +32,8 @@ Latest DirectX               http://www.microsoft.com/downloads/details.aspx?fam
 
 If you click the track node in the tree window when an animation is active, the axis will appear at that specific bone. To hide it, click in the name of the animation at the top (root) of the tree or select "None" as animation.
 
-In linux, you have to "install the program". If you've downloaded the source, check COMPILING instructions, if you've downloaded the compiled package, type "make install" from a terminal
+**IMPORTANT: Linux Users**
+OgreMeshy needs to have RW access to the folder "/home/username/.ogremeshy"
 
 FAQ
 ===

@@ -3,7 +3,7 @@
 ;--------------------------------
 ; You must define these values
 
-  !define VERSION "1.5.0"
+  !define VERSION "1.6.0"
   !define PATCH  "0"
   !define INST_DIR "../../bin/Release"
 
@@ -32,7 +32,7 @@
 
   ;Name and file
   Name "OgreMeshy"
-  OutFile "OgreMeshy-1.5-Win32.exe"
+  OutFile "OgreMeshy-1.6-Win32.exe"
 
   ;Set compression
   SetCompressor lzma
@@ -660,7 +660,7 @@ Section "-Core installation"
   Push "OgreMeshy"
   Call ConditionalAddToRegisty
   Push "DisplayVersion"
-  Push "1.5.0"
+  Push "1.6.0"
   Call ConditionalAddToRegisty
   Push "Publisher"
   Push "Matias N. Goldberg"
