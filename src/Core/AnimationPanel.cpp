@@ -132,14 +132,22 @@ void AnimationPanel::showBones( bool withNames )
 	if( skeletonInstance )
 	{
 		//Create BoneTips first, because TagPoints are listed as children of the bones too
-		Ogre::Skeleton::BoneIterator itor = skeletonInstance->getRootBoneIterator();
-		while( itor.hasMoreElements() )
-			createBoneTip( itor.getNext() );
+//		Ogre::Skeleton::BoneIterator itor = skeletonInstance->getRootBoneIterator();
+//		while( itor.hasMoreElements() )
+//			createBoneTip( itor.getNext() );
+		const Ogre::Skeleton::BoneList &boneList = skeletonInstance->getRootBones();
+		Ogre::Skeleton::BoneList::const_iterator itor = boneList.begin();
+		Ogre::Skeleton::BoneList::const_iterator end  = boneList.end();
+		while( itor != end )
+			createBoneTip( *itor++ );
 
-		itor = skeletonInstance->getBoneIterator();
-		while( itor.hasMoreElements() )
+//		itor = skeletonInstance->getBoneIterator();
+//		while( itor.hasMoreElements() )
+		itor = boneList.begin();
+		while( itor != end )
 		{
-			Ogre::Bone *bone = itor.getNext();
+//			Ogre::Bone *bone = itor.getNext();
+			Ogre::Bone *bone = *itor;
 			VisualBone visualBone;
 			visualBone.entity  = m_sceneManager->createEntity( "Bone" +
 															Ogre::StringConverter::toString(m_entitiesId++),
@@ -169,6 +177,8 @@ void AnimationPanel::showBones( bool withNames )
 
 			visualBone.entity->setRenderQueueGroup( Ogre::RENDER_QUEUE_SKIES_LATE );
 			m_visualBones.push_back( visualBone );
+
+			++itor;
 		}
 	}
 }
