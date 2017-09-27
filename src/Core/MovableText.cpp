@@ -50,8 +50,8 @@ MovableText::~MovableText()
 { 
 	if (mRenderOp.vertexData) 
 		delete mRenderOp.vertexData; 
-	// May cause crashing... check this and comment if it does 
-	if (!mpMaterial.isNull()) 
+	// May cause crashing... check this and comment if it does
+	if (mpMaterial)
 		MaterialManager::getSingletonPtr()->remove(mpMaterial->getName()); 
 } 
 
@@ -62,18 +62,18 @@ void MovableText::setFontName(const String &fontName)
 		Ogre::MaterialManager::getSingleton().remove(mName + "Material"); 
 	} 
 
-	if (mFontName != fontName || mpMaterial.isNull() || !mpFont) 
+	if (mFontName != fontName || !mpMaterial || !mpFont)
 	{ 
 		mFontName = fontName; 
-		mpFont = (Font *)FontManager::getSingleton().getByName(mFontName).getPointer(); 
+		mpFont = (Font *)FontManager::getSingleton().getByName(mFontName).get();
 		if (!mpFont) 
 			throw Exception(Exception::ERR_ITEM_NOT_FOUND, "Could not find font " + fontName, "MovableText::setFontName"); 
 
 		mpFont->load(); 
-		if (!mpMaterial.isNull()) 
+		if (mpMaterial)
 		{ 
 			MaterialManager::getSingletonPtr()->remove(mpMaterial->getName()); 
-			mpMaterial.setNull(); 
+			mpMaterial.reset();
 		} 
 
 		mpMaterial = mpFont->getMaterial()->clone(mName + "Material"); 
@@ -150,7 +150,7 @@ void MovableText::setLocalTranslation( Vector3 trans )
 
 void MovableText::showOnTop(bool show) 
 { 
-	if( mOnTop != show && !mpMaterial.isNull() ) 
+	if( mOnTop != show && mpMaterial )
 	{ 
 		mOnTop = show; 
 		mpMaterial->setDepthBias(1.0,1.0); 
@@ -162,7 +162,7 @@ void MovableText::showOnTop(bool show)
 void MovableText::_setupGeometry() 
 { 
 	assert(mpFont); 
-	assert(!mpMaterial.isNull()); 
+	assert(mpMaterial);
 
 	unsigned int vertexCount = static_cast<unsigned int>(mCaption.size() * 6); 
 
@@ -454,7 +454,7 @@ void MovableText::_setupGeometry()
 void MovableText::_updateColors(void) 
 { 
 	assert(mpFont); 
-	assert(!mpMaterial.isNull()); 
+	assert(mpMaterial);
 
 	// Convert to system-specific 
 	RGBA color; 

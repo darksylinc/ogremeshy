@@ -105,8 +105,8 @@ namespace Ogre
 		void _updateRenderQueue(RenderQueue* queue); 
 
 		// from renderable 
-		void getRenderOperation(RenderOperation &op); 
-		const MaterialPtr &getMaterial(void) const {assert(!mpMaterial.isNull());return mpMaterial;}; 
+		void getRenderOperation(RenderOperation &op);
+		const MaterialPtr &getMaterial(void) const {assert(mpMaterial);return mpMaterial;};
 		const LightList &getLights(void) const {return mLList;}; 
 	}; 
 
