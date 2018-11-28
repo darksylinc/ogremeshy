@@ -1,9 +1,9 @@
-mkdir ../../bin/Release_Linux/Resources
-mkdir ../../bin/Release_Linux/Resources/Fonts
-mkdir ../../bin/Release_Linux/Resources/Models
-mkdir ../../bin/Release_Linux/Resources/Icons
-mkdir ../../bin/Release_Linux/Resources/Icons/32x32
-mkdir ../../bin/Release_Linux/Resources/RTShaderLib
+mkdir -p ../../bin/Release_Linux/Resources
+mkdir -p ../../bin/Release_Linux/Resources/Fonts
+mkdir -p ../../bin/Release_Linux/Resources/Models
+mkdir -p ../../bin/Release_Linux/Resources/Icons
+mkdir -p ../../bin/Release_Linux/Resources/Icons/32x32
+mkdir -p ../../bin/Release_Linux/Resources/RTShaderLib
 
 cp -r Icons/32x32 ../../bin/Release_Linux/Resources/Icons
 
@@ -22,6 +22,6 @@ cp Blender/Bones/BoneTip.mesh ../../bin/Release_Linux/Resources/Models
 
 cp Blender/Bones/BoneGlobe.mesh ../../bin/Release_Linux/Resources/Models
 
-mkdir ../../bin/Release_Linux/Plugins
+mkdir -p ../../bin/Release_Linux/Plugins
 cp ../../bin/Release/Readme.txt ../../bin/Release_Linux/
 cp ../../bin/Release/ChangeLog.txt ../../bin/Release_Linux/
