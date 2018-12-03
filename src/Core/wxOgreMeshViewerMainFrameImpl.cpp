@@ -1108,7 +1108,7 @@ void MeshyMainFrameImpl::hideAxis()
 	if( m_axisNode )
 	{
 		Ogre::Entity *entity = static_cast<Ogre::Entity*>(m_axisNode->getAttachedObject(0));
-		m_axisNode->getParentSceneNode()->removeAndDestroyChild( m_axisNode->getName() );
+		m_axisNode->getParentSceneNode()->removeAndDestroyChild( m_axisNode );
 		m_sceneManager->destroyEntity( entity );
 
 		m_axisNode = 0;
@@ -1207,7 +1207,7 @@ void MeshyMainFrameImpl::hideGrid()
 	if( m_gridNode )
 	{
 		Ogre::Entity *entity = static_cast<Ogre::Entity*>(m_gridNode->getAttachedObject(0));
-		m_gridNode->getParentSceneNode()->removeAndDestroyChild( m_gridNode->getName() );
+		m_gridNode->getParentSceneNode()->removeAndDestroyChild( m_gridNode );
 		m_sceneManager->destroyEntity( entity );
 
 		m_gridNode = 0;

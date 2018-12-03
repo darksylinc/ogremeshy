@@ -239,13 +239,16 @@ void AnimationPanel::hideBones()
 //-----------------------------------------------------------------------------
 void AnimationPanel::createBoneTip( Ogre::Bone *parentBone )
 {
-	Ogre::Bone::ChildNodeIterator childIt = parentBone->getChildIterator();
-	while( childIt.hasMoreElements() )
+	Ogre::Bone::ChildNodeMap childNodeMapCopy = parentBone->getChildren();
+
+	Ogre::Bone::ChildNodeMap::const_iterator itor = childNodeMapCopy.begin();
+	Ogre::Bone::ChildNodeMap::const_iterator end  = childNodeMapCopy.end();
+	while( itor != end )
 	{
 		VisualLink visualLink;
 
 		//Ugh, unsafe upcast
-		Ogre::Bone *childBone	= static_cast<Ogre::Bone*>(childIt.getNext());
+		Ogre::Bone *childBone	= static_cast<Ogre::Bone*>(*itor);
 		visualLink.linkedChild	= childBone;
 
 		//TODO: Does anyone know a better way to skip (our own?) TagPoints?
@@ -280,6 +283,8 @@ void AnimationPanel::createBoneTip( Ogre::Bone *parentBone )
 			visualLink.visualBone.entity->setRenderQueueGroup( Ogre::RENDER_QUEUE_SKIES_LATE - 1 );
 			m_visualLinks.push_back( visualLink );
 		}
+
+		++itor;
 	}
 }
 
