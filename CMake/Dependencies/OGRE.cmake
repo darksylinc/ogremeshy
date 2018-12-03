@@ -41,6 +41,7 @@ macro( setupPluginFileFromTemplate BUILD_TYPE )
 	#findPluginAndSetPath( ${BUILD_TYPE} OGRE_PLUGIN_RS_GL3PLUS	RenderSystem_GL3Plus )
 	findPluginAndSetPath( ${BUILD_TYPE} OGRE_PLUGIN_CG			Plugin_CgProgramManager )
 	findPluginAndSetPath( ${BUILD_TYPE} OGRE_PLUGIN_PARTICLEFX	Plugin_ParticleFX )
+	findPluginAndSetPath( ${BUILD_TYPE} OGRE_PLUGIN_CODEC_FREEIMAGE		Codec_FreeImage )
 
 	configure_file( ${CMAKE_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in ${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/Plugins.cfg )
 
@@ -107,16 +108,19 @@ include_directories( "${OGRE_BINARIES}/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Common/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Unlit/include" )
 #include_directories( "${OGRE_SOURCE}/Components/Hlms/Pbs/include" )
+include_directories( "${OGRE_SOURCE}/Components/Bites/include" )
 include_directories( "${OGRE_SOURCE}/Components/Overlay/include" )
 
 set( OGRE_LIBRARIES
-	debug OgreMain_d
-	debug OgreOverlay_d
+	debug OgreMain
+	debug OgreOverlay
 	#debug OgreHlmsUnlit_d
 	#debug OgreHlmsPbs_d
+	debug OgreBites
 
 	optimized OgreMain
 	optimized OgreOverlay
+	optimized OgreBites
 	#optimized OgreHlmsUnlit
 	#optimized OgreHlmsPbs
 	)

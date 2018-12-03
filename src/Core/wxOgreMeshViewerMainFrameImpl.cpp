@@ -38,6 +38,7 @@
     #include "OgreShaderGenerator.h"
 #endif
 #include "OgreException.h"
+#include "OgreBitesConfigDialog.h"
 
 #include "iostream"
 
@@ -484,7 +485,7 @@ void MeshyMainFrameImpl::initOgre( bool bForceSetup )
 
 	m_root = new Ogre::Root(c_pluginsCfg + "Plugins.cfg", m_configDirectory + "ogre.cfg", m_configDirectory + "Ogre.log");
 	if( bForceSetup || !m_root->restoreConfig() )
-		m_root->showConfigDialog();
+		m_root->showConfigDialog( OgreBites::getNativeConfigDialog() );
 
 	m_root->initialise( false );
 
@@ -740,7 +741,7 @@ void MeshyMainFrameImpl::openMesh( const std::string &directory, const std::stri
 		m_animationPanel->meshUnload();
 		m_animPosePanel->meshUnload();
 
-		m_meshSceneNode->getParentSceneNode()->removeAndDestroyChild( m_meshSceneNode->getName() );
+		m_meshSceneNode->getParentSceneNode()->removeAndDestroyChild( m_meshSceneNode );
 		m_sceneManager->destroyEntity( m_meshEntity );
 
 		//Disable reload option
@@ -1490,22 +1491,19 @@ void MeshyMainFrameImpl::takeSnapshot( bool askLocation )
                                                                             fullPath.mb_str() ) );
 			m_statusBar1->SetStatusText( wxT( "Screenshot: " + fullPath ), 0 );
 		}
+		catch( Ogre::IOException &e )
+		{
+			//This could've happened because the documents dir doesn't exist and/or we don't
+			//have write access to file. Try once more, this time asking the user where
+			//to save the file.
+			takeSnapshot( askLocation );
+		}
 		catch( Ogre::Exception &e )
 		{
-			if( e.getNumber() == Ogre::Exception::ERR_CANNOT_WRITE_TO_FILE && !askLocation )
-			{
-				//This could've happened because the documents dir doesn't exist and/or we don't
-				//have write access to file. Try once more, this time asking the user where
-				//to save the file.
-				takeSnapshot( askLocation );
-			}
-			else
-			{
-				wxMessageBox( wxT( "Error while saving " ) + fullPath +
-							  wxString( e.getFullDescription().c_str(), wxConvUTF8 ),
-							  wxT( "Error while saving screenshot" ),
-							  wxOK|wxICON_ERROR|wxCENTRE );
-			}
+			wxMessageBox( wxT( "Error while saving " ) + fullPath +
+						  wxString( e.getFullDescription().c_str(), wxConvUTF8 ),
+						  wxT( "Error while saving screenshot" ),
+						  wxOK|wxICON_ERROR|wxCENTRE );
 		}
 	}
 }
