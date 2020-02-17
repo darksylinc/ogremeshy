@@ -132,8 +132,10 @@ void wxOgreRenderWindow::OnSize (wxSizeEvent &evt)
 		height = size.GetHeight ();
 
 		mRenderWindow->resize(width, height);
+#if OGRE_VERSION_MAJOR != 1 || OGRE_VERSION_MINOR < 12
 		// Letting Ogre know the window has been resized;
 		mRenderWindow->windowMovedOrResized();
+#endif
 
 #if OGRE_VERSION_MAJOR < 2
         Ogre::Viewport *vp = mRenderWindow->getViewport(0);
