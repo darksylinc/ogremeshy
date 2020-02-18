@@ -666,12 +666,12 @@ void MeshyMainFrameImpl::showAboutBox()
 
 	info.SetName(_T("Ogre Meshy"));
 #ifdef __WXMSW__
-	info.SetVersion(wxT("1.6"));
+	info.SetVersion(wxT("1.7"));
 #else
-	info.SetVersion(wxT("1.6 for Linux beta"));
+	info.SetVersion(wxT("1.7 for Linux beta"));
 #endif
     info.SetDescription(_T("Simple application to view mesh properties\n") + descLinked);
-    info.SetCopyright(_T("(C) 2010-2015 Matias N. Goldberg \"dark_sylinc\""));
+	info.SetCopyright(_T("(C) 2010-2020 Matias N. Goldberg \"dark_sylinc\""));
 	info.AddDeveloper(_T("Matias N. Goldberg - dark_sylinc"));
 	info.AddDeveloper(_T("Thomas Fischer - tdev"));
 	info.AddDeveloper(_T("Alberto Toglia - toglia"));

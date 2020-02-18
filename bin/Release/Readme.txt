@@ -1,7 +1,7 @@
-﻿OGRE MESHY  v1.6
+﻿OGRE MESHY  v1.7
 =================
 
-Copyright (C) 2010-2015 Matías Goldberg ("dark_sylinc)
+Copyright (C) 2010-2020 Matías Goldberg ("dark_sylinc)
 Under GPLv3 license
 
 File.png, Reload.png & ChangeBGColour.png are icons from H2O KDE package, made by Rogerio de Souza Santos, http://opendesktop.org/content/show.php?content=127149
@@ -74,7 +74,7 @@ Thomas Fischer - tdev
 
 
 //----------------------------------------------------------------------
-//  Copyright (C) 2010-2013 Matias N. Goldberg ("dark_sylinc")
+//  Copyright (C) 2010-2020 Matias N. Goldberg ("dark_sylinc")
 //  This file is part of Ogre Meshy.
 //
 //  Ogre Meshy is free software: you can redistribute it and/or modify

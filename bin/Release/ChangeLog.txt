@@ -1,3 +1,7 @@
+[1.7]
+Maintenance release.
+Ported to Ogre 1.12
+
 [1.6]
 Maintenance release.
 Ported to wxWidgets 3.0
