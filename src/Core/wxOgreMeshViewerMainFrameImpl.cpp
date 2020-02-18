@@ -89,6 +89,10 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 			m_mouseX( 0 ),
 			m_mouseY( 0 ),
 			m_coordinateConvention( COORD_Y_UP )
+			#ifdef MESHY_USE_RTSS
+			,	m_shaderGenerator( 0 ),
+				mMaterialMgrListener( 0 )
+			#endif
 {
 #ifndef __WXMSW__
 	//Set config directory to user home directory
