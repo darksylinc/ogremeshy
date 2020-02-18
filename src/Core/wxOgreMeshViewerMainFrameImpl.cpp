@@ -202,15 +202,15 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
 																	c_InterMeshPermGroup );
 
 #ifdef MESHY_USE_RTSS
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/ShadowVolume",
+																	"FileSystem", c_InterMeshPermGroup );
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib",
 																	"FileSystem", c_InterMeshPermGroup );
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/GLSL",
 																	"FileSystem", c_InterMeshPermGroup );
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/GLSLES",
 																	"FileSystem", c_InterMeshPermGroup );
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/HLSL",
-																	"FileSystem", c_InterMeshPermGroup );
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/Cg",
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/HLSL_Cg",
 																	"FileSystem", c_InterMeshPermGroup );
 #endif
 
