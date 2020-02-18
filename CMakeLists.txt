@@ -61,7 +61,7 @@ macro( copy_resources BUILD_TYPE )
 	file( COPY "./scripts/Resources/Blender/Bones/BoneTip.mesh"		 DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/Resources/Models" )
 	file( COPY "./scripts/Resources/Blender/Bones/BoneGlobe.mesh"	 DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/Resources/Models" )
 	if( USE_RTSS )
-		file( COPY "${OGRE_SOURCE}/Samples/Media/RTShaderLib"		 DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/Resources" )
+		file( COPY "${OGRE_SOURCE}/Media/RTShaderLib"				DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/Resources" )
 	endif()
 
 	if( UNIX )

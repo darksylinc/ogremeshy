@@ -17,21 +17,21 @@
 		Ogre::Technique* generatedTech = NULL;
 
 		// Case this is the default shader generator scheme.
-		if (schemeName == Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME)
+		if (mShaderGenerator->hasRenderState(schemeName))
 		{
 			bool techniqueCreated;
 
 			// Create shader generated technique for this material.
 			techniqueCreated = mShaderGenerator->createShaderBasedTechnique(
-				originalMaterial->getName(), 
+				*originalMaterial,
 				Ogre::MaterialManager::DEFAULT_SCHEME_NAME, 
-				schemeName);	
+				schemeName );
 
 			// Case technique registration succeeded.
 			if (techniqueCreated)
 			{
 				// Force creating the shaders for the generated technique.
-				mShaderGenerator->validateMaterial(schemeName, originalMaterial->getName());
+				mShaderGenerator->validateMaterial(schemeName, originalMaterial->getName(), originalMaterial->getGroup());
 				
 				// Grab the generated technique.
 				Ogre::Material::TechniqueIterator itTech = originalMaterial->getTechniqueIterator();

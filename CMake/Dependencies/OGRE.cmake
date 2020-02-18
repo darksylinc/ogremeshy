@@ -59,6 +59,7 @@ macro( setupPluginFileFromTemplate BUILD_TYPE )
 			if( EXISTS "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreMain.dll" )
 				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreMain.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreOverlay.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
+				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreBites.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				if( USE_RTSS )
 					file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreRTShaderSystem.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				endif()
@@ -67,11 +68,15 @@ macro( setupPluginFileFromTemplate BUILD_TYPE )
 			if( EXISTS "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreMain_d.dll" )
 				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreMain_d.dll"		DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreOverlay_d.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
+				file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreBites_d.dll"		DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				if( USE_RTSS )
 					file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/OgreRTShaderSystem_d.dll"	DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 				endif()
 			endif()
 		endif()
+
+		file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/zlib.dll"		DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
+		file( COPY "${OGRE_BINARIES}/bin/${BUILD_TYPE}/SDL2.dll"		DESTINATION "${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}" )
 	endif()
 	
 	unset( OGRE_PLUGIN_RS_D3D9 )
@@ -112,11 +117,11 @@ include_directories( "${OGRE_SOURCE}/Components/Bites/include" )
 include_directories( "${OGRE_SOURCE}/Components/Overlay/include" )
 
 set( OGRE_LIBRARIES
-	debug OgreMain
-	debug OgreOverlay
+	debug OgreMain_d
+	debug OgreOverlay_d
 	#debug OgreHlmsUnlit_d
 	#debug OgreHlmsPbs_d
-	debug OgreBites
+	debug OgreBites_d
 
 	optimized OgreMain
 	optimized OgreOverlay

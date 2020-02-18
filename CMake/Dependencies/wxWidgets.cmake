@@ -11,8 +11,13 @@ if( WIN32 )
 	include_directories( "${wxWidgets_INCLUDE_DIRS}" )
 		# Technically we should include mswu & mswud but we assume they're equal.
 		# (CMake can't do per target includes... grr....)
-		include_directories( "${wxWidgets_SOURCE}/lib/vc_lib/mswu" )
-		link_directories( "${wxWidgets_SOURCE}/lib/vc_lib" )
+		if( "${CMAKE_SIZEOF_VOID_P}" STREQUAL "4" )
+			include_directories( "${wxWidgets_SOURCE}/lib/vc_lib/mswu" )
+			link_directories( "${wxWidgets_SOURCE}/lib/vc_lib" )
+		else()
+			include_directories( "${wxWidgets_SOURCE}/lib/vc_x64_lib/mswu" )
+			link_directories( "${wxWidgets_SOURCE}/lib/vc_x64_lib" )
+		endif()
 
 	set( wxWidgets_LIBRARIES
 		debug wxbase30ud

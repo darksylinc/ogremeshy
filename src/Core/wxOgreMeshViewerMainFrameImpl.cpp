@@ -209,17 +209,21 @@ MeshyMainFrameImpl::MeshyMainFrameImpl( wxWindow* parent, const CmdSettings &cmd
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation( "Resources/RTShaderLib/Cg",
 																	"FileSystem", c_InterMeshPermGroup );
 #endif
-	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup( c_InterMeshPermGroup );
 
 #ifdef MESHY_USE_RTSS
 	bool success = initializeRTShaderSystem(m_sceneManager);
 	if (success)
 	{
-		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->setTargetLanguage("cg");
+		//Ogre::RTShader::ShaderGenerator::getSingletonPtr()->setTargetLanguage("cg");
 		Ogre::RTShader::ShaderGenerator::getSingletonPtr()->addSceneManager(m_sceneManager);
         m_shaderGenerator->addSceneManager(m_sceneManager);
 	}
+	SetRTSS( true );
+#else
+	SetRTSS( m_menuView->IsChecked( wxID_MENUUSERTSS ) );
 #endif
+
+	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup( c_InterMeshPermGroup );
 
 	//Create this one here now to avoid an exception when we try to delete it
 	Ogre::ResourceGroupManager::getSingleton().createResourceGroup( c_InternMeshGroup );
@@ -267,7 +271,6 @@ wxT("Thank you :)"));
 
 	createGrid();
 	showGrid();
-	SetRTSS( m_menuView->IsChecked( wxID_MENUUSERTSS ) );
 
 	//Apply settings
 	setCoordinateConvention( m_coordinateConvention );
@@ -1900,7 +1903,7 @@ bool MeshyMainFrameImpl::initializeRTShaderSystem(Ogre::SceneManager* sceneMgr)
 			// when running from different directories.
 			while( itor != end && !coreLibsFound )
 			{
-				if( (*itor)->archive->getName().find("RTShaderLib") != Ogre::String::npos )
+				if( itor->archive->getName().find("RTShaderLib") != Ogre::String::npos )
 					coreLibsFound = true;
 				++itor;
 			}
